@@ -1,21 +1,20 @@
 import Not_found from "@/app/not-found";
 import ProductDetails from "./ProductDetailsPage";
 
-export const dynamic = "force-dynamic";
+interface ProductDetailPageProps {
+  params: {
+    slug: string;
+  };
+}
 
-// No explicit PageProps
-export default async function ProductDetailPage({ params }: any) {
+export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
   const { slug } = params;
   const id = slug.split("-").pop();
 
   try {
-    const res = await fetch(`https://fakestoreapi.com/products/${id}`, {
-      cache: "no-store",
-    });
-
-    if (!res.ok) return <Not_found />;
-
+    const res = await fetch(`https://fakestoreapi.com/products/${id}`);
     const product = await res.json();
+
     return <ProductDetails product={product} />;
   } catch (error) {
     return <Not_found />;
