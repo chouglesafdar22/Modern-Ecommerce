@@ -40,7 +40,7 @@ interface ProductDetailsProps {
     product: Product;
 }
 
-export default function ProductDetails({ product }: ProductDetailsProps) {
+export default function ProductDetailsPage({ product }: ProductDetailsProps) {
     const [quantity, setQuantity] = useState<number>(1);
     const [showDescription, setShowDescription] = useState<boolean>(false);
     const { addToCart, cart } = useCart();
