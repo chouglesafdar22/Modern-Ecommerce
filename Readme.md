@@ -141,7 +141,7 @@ Building real-world projects
  · Vercel
 
 ## How to Run Locally
-    git clone your-repo-url
+    git clone https://github.com/chouglesafdar22/Modern-Ecommerce.git
     cd modern-ecommerce-store
     npm install
     npm run dev
