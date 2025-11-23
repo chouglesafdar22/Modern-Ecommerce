@@ -142,7 +142,7 @@ Building real-world projects
 
 ## How to Run Locally
     git clone https://github.com/chouglesafdar22/Modern-Ecommerce.git
-    cd modern-ecommerce-store
+    cd Modern-Ecommerce/frontend
     npm install
     npm run dev
     
