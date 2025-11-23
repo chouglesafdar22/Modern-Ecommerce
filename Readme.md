@@ -130,7 +130,7 @@ Building real-world projects
 
 ### API
  
- ·FakeStoreAPI(Products)
+ · FakeStoreAPI(Products)
 
 ### State Persistence
 
@@ -138,7 +138,7 @@ Building real-world projects
 
 ### Deployment
 
- · Vercel (recommended)
+ · Vercel
 
 ## How to Run Locally
     git clone your-repo-url
