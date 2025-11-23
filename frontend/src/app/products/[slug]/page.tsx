@@ -4,15 +4,22 @@ import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-interface Params {
-  slug: string;
+interface Product {
+  id: number;
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  image: string;
+  rating: { rate: number; count: number };
+  stock: number;
 }
 
-interface Props {
-  params: Params;
+interface PageProps {
+  params: { slug: string };
 }
 
-export default async function ProductDetailPage({ params }: Props) {
+export default async function ProductDetailPage({ params }: PageProps) {
   const { slug } = params;
   const id = slug.split("-").pop();
 
@@ -23,9 +30,10 @@ export default async function ProductDetailPage({ params }: Props) {
 
     if (!res.ok) return notFound();
 
-    const product = await res.json();
+    const product: Product = await res.json();
     return <ProductDetails product={product} />;
   } catch (error) {
     return <Not_found />;
   }
 }
+
