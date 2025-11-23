@@ -130,7 +130,7 @@ Building real-world projects
 
 ### API
  
- · FakeStoreAPI(Products)
+ · FakeStoreAPI (Products)
 
 ### State Persistence
 
