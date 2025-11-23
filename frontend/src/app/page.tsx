@@ -51,7 +51,7 @@ export default function Page() {
         setLoading(true);
         const { data } = await api.get("/products/categories");
         setCategories(data);
-      } catch (err) {
+      } catch (error) {
         console.error("Error fetching categories");
       } finally {
         setLoading(false);

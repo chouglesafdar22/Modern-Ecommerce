@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 // No explicit PageProps
 export default async function ProductDetailPage({ params }: any) {
-  const { slug } = params;
+  const { slug } = await params;
   console.log("Full slug:", slug);
   const id = slug?.split("-").pop();
   console.log("Extracted ID:", id);
