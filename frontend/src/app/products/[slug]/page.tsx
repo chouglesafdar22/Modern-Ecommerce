@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export interface ProductDetailPageProps {
+interface ProductDetailPageProps {
   params: {
     slug: string;
   };
