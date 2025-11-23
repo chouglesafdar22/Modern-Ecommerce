@@ -15,11 +15,13 @@ interface Product {
   stock: number;
 }
 
-interface PageProps {
+// Directly destructure params without defining PageProps
+export default async function ProductDetailPage({
+  params,
+}: {
   params: { slug: string };
-}
-
-export default async function ProductDetailPage({ params }: PageProps) {
+}) {
+  
   const { slug } = params;
   const id = slug.split("-").pop();
 
@@ -36,4 +38,5 @@ export default async function ProductDetailPage({ params }: PageProps) {
     return <Not_found />;
   }
 }
+
 
