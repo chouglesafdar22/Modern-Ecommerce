@@ -4,13 +4,13 @@ import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export interface PageProps {
+export interface ProductDetailPageProps {
   params: {
     slug: string;
   };
 }
 
-export default async function ProductDetailPage({ params }: PageProps) {
+export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
   const { slug } = params;
   const id = slug.split("-").pop();
 
