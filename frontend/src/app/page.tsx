@@ -32,7 +32,7 @@ export default function Page() {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const { data } = await api.get("https://fakestoreapi.com/products");
+        const { data } = await api.get("/products");
         setProducts(data);
         setFilteredProducts(data);
       } catch (err) {
