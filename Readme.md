@@ -130,7 +130,7 @@ Building real-world projects
 
 ### API
  
- ·FakeStoreAPI(Products)
+ · FakeStoreAPI (Products)
 
 ### State Persistence
 
@@ -138,11 +138,11 @@ Building real-world projects
 
 ### Deployment
 
- · Vercel (recommended)
+ · Vercel
 
 ## How to Run Locally
-    git clone your-repo-url
-    cd modern-ecommerce-store
+    git clone https://github.com/chouglesafdar22/Modern-Ecommerce.git
+    cd Modern-Ecommerce/frontend
     npm install
     npm run dev
     
