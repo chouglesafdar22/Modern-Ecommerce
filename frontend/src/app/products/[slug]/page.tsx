@@ -1,27 +1,10 @@
 import Not_found from "@/app/not-found";
 import ProductDetails from "./ProductDetailsPage";
-import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  description: string;
-  category: string;
-  image: string;
-  rating: { rate: number; count: number };
-  stock: number;
-}
-
-// Directly destructure params without defining PageProps
-export default async function ProductDetailPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  
+// No explicit PageProps
+export default async function ProductDetailPage({ params }: any) {
   const { slug } = params;
   const id = slug.split("-").pop();
 
@@ -30,13 +13,14 @@ export default async function ProductDetailPage({
       cache: "no-store",
     });
 
-    if (!res.ok) return notFound();
+    if (!res.ok) return <Not_found />;
 
-    const product: Product = await res.json();
+    const product = await res.json();
     return <ProductDetails product={product} />;
   } catch (error) {
     return <Not_found />;
   }
 }
+
 
 
