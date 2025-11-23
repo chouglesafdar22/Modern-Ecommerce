@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=TASA+Orbiter:wght@400..800&display=swap" />
-        <link rel="preload" href="/_next/static/css/715be398208dca58.css" as="style" />
+        <link rel="stylesheet" href="/_next/static/css/715be398208dca58.css" as="style" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} scroll-smooth antialiased xl:px-2.5 lg:px-2 md:px-1.5 sm:px-1 px-0.5 xl:py-2.5 lg:py-2 md:py-1.5 sm:py-1 py-0.5 font-sans justify-center items-center`}
