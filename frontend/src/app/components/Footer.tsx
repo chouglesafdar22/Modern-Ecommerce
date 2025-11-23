@@ -13,7 +13,7 @@ function Footer() {
             <footer className='flex flex-col bottom-0 relative w-full pt-20 pb-8 px-6 bg-black text-white font-sans gap-4'>
                 <div className='grid xl:grid-cols-2 grid-cols-1 gap-8'>
                     <div className='flex flex-col justify-start items-start gap-4'>
-                        <h2 className='items-start xl:text-2xl lg:text-xl sm:text-lg text-base font-bold'>FragranceStore</h2>
+                        <h2 className='items-start xl:text-2xl lg:text-xl sm:text-lg text-base font-bold'>E-CommerceUI</h2>
                         <p className='items-start xl:text-lg lg:text-base sm:text-sm text-[12px]'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis, omnis.</p>
                         {/* Discover timeless timepieces for effortless elegance. */}
                         <div className='flex flex-row gap-3 justify-center items-center'>

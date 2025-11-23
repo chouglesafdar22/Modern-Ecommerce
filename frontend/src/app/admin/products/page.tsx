@@ -9,7 +9,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 
 interface Product {
-    _id: string;
+    id: string;
     title: string;
     price: number;
     image: string;
@@ -78,18 +78,18 @@ export default function Page() {
 
                     <tbody className="divide-y">
                         {products.map((p) => (
-                            <tr key={p._id}>
-                                <td className="px-4 py-3">
+                            <tr key={p.id}>
+                                <td className="px-4 py-3 text-center">
                                     <img src={p.image} alt={p.title} className="w-12 h-12 object-cover rounded" />
                                 </td>
                                 <td className="px-4 py-3">{p.title}</td>
-                                <td className="px-4 py-3">${p.price}</td>
-                                <td className="px-4 py-3">
+                                <td className="px-4 py-3 text-center">${p.price}</td>
+                                <td className="px-4 py-3 text-center">
                                     {typeof p.category === "object" ? (p.category as any)?.name : (p.category as any)}
                                 </td>
-                                <td className="px-4 py-3 text-right">
+                                <td className="px-4 py-3 text-center">
                                     <div className="flex items-center justify-end gap-2">
-                                        <Link href={`/admin/product/${p._id}`} className="px-3 py-1 border rounded xl:text-lg lg:text-base sm:text-sm text-xs">
+                                        <Link href={`/admin/product/${p.id}`} className="px-3 py-1 border rounded xl:text-lg lg:text-base sm:text-sm text-xs">
                                             <CiEdit/>
                                         </Link>
                                         <motion.button

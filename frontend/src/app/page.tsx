@@ -130,7 +130,7 @@ export default function Page() {
           <div className="flex md:flex-row flex-col gap-6 w-full max-w-7xl mx-auto">
 
             {/* CATEGORY LIST */}
-            <div className="flex flex-col gap-3 p-4 sticky top-4 md:w-1/5 w-full rounded-xl border border-gray-100 shadow-md bg-white">
+            <div className="flex flex-col gap-3 p-4 sticky top-4 md:w-1/5 w-full rounded-xl border border-gray-100 shadow-sm bg-white">
               {loading ? (
                 <CategorySkeleton />
               ) : (
@@ -183,7 +183,7 @@ export default function Page() {
                 </div>
               ) : error ? (
                 <div className="flex flex-col items-center justify-center h-96 text-red-700 p-6">
-                  <h2 className="text-2xl font-semibold mb-2">
+                  <h2 className="text-2xl font-semibold md:mb-2 mb-1">
                     Something went wrong!
                   </h2>
                   <div className="text-center font-sans text-gray-700 text-xl mt-10"> No products found. </div>
@@ -191,7 +191,7 @@ export default function Page() {
               ) : filteredProducts.length === 0 ? (
                 <p className="text-gray-600 text-center">No products found.</p>
               ) : (
-                <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
+                <div className="grid xl:grid-cols-3 md:grid-cols-2 justify-center items-center text-center grid-cols-1 gap-4">
                   {filteredProducts.map((item) => (
                     <ProductCard key={item.id} product={item} />
                   ))}

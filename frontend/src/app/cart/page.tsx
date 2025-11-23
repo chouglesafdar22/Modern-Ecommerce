@@ -42,7 +42,7 @@ export default function CartSider() {
                     style={{ height: "100vh" }}
                 >
                     {/* Top Header */}
-                    <div className="flex justify-between items-center px-4 py-1.5 border-b border-b-gray-400 sticky top-0 bg-white z-10">
+                    <div className="flex justify-between items-center px-4 py-1.5 sticky top-0 bg-white z-10">
                         <div className="flex items-center gap-3">
                             <h2 className="xl:text-2xl lg:text-xl sm:text-lg text-base font-semibold">
                                 Your Cart
