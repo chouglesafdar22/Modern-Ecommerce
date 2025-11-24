@@ -3,28 +3,17 @@ import ProductDetailsPage from "./ProductDetailsPage";
 
 export const dynamic = "force-dynamic";
 
-// No explicit PageProps
-export default async function Page({ params }: any) {
-  const { slug } = await params;
-  console.log("Full slug:", slug);
+export default async function ProductDetailPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const { slug } = params;
+
   const id = slug.split("-").pop();
-  console.log("Extracted ID:", id);
 
-  if (!id) return <Not_found />;
+  const res = await fetch(`https://fakestoreapi.com/products/${id}`);
+  const product = await res.json();
 
-  try {
-    const res = await fetch(`https://fakestoreapi.com/products/${id}`, {
-      cache: "no-store",
-    });
-
-    console.log("API Response Status:", res.status);
-
-    if (!res.ok) return <Not_found />;
-
-    const product = await res.json();
-    return <ProductDetailsPage product={product} />;
-  } catch (error) {
-    console.error(error)
-    return <Not_found />;
-  }
+  return <ProductDetailsPage product={product} />;
 }
