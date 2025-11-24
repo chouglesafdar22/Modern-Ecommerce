@@ -17,9 +17,7 @@ export default async function Page({
   if (!id) return <Not_found />;
 
   try {
-    const res = await fetch(`https://fakestoreapi.com/products/${id}`, {
-      cache: "no-store",
-    });
+    const res = await fetch(`https://fakestoreapi.com/products/${id}`);
 
     console.log("API Response Status:", res.status);
 
