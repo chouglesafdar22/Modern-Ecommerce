@@ -3,14 +3,14 @@ import ProductDetailsPage from "./ProductDetailsPage";
 
 export const dynamic = "force-dynamic";
 
-export default async function Page(props: any) {
-  const params = await props.params;  // ⭐ FIX
-  const slug = params?.slug;
-
+// No explicit PageProps
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params;
   console.log("Full slug:", slug);
-
-  if (!slug) return <Not_found />;
-
   const id = slug.split("-").pop();
   console.log("Extracted ID:", id);
 
@@ -28,8 +28,7 @@ export default async function Page(props: any) {
     const product = await res.json();
     return <ProductDetailsPage product={product} />;
   } catch (error) {
-    console.error(error);
+    console.error(error)
     return <Not_found />;
   }
 }
-
