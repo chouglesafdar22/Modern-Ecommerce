@@ -136,14 +136,14 @@ export default function ProductDetailsPage({ product }: ProductDetailsProps) {
                                 {/* Description Toggle */}
                                 <div className="flex flex-col gap-1.5 cursor-pointer"
                                     onClick={() => setShowDescription(!showDescription)}>
-                                    <p className="flex flex-row items-center gap-1 xl:text-lg lg:text-base sm:text-sm text-[12px] font-light">
+                                    <span className="flex flex-row items-center xl:text-lg lg:text-base sm:text-sm text-[12px] font-light">
                                         Description
                                         {showDescription ? <MdOutlineKeyboardArrowUp /> : <MdKeyboardArrowDown />}
-                                    </p>
+                                    </span>
                                     {showDescription && (
-                                        <span className="xl:text-[17px] lg:text-[15px] sm:text-[13px] text-[11px] font-extralight">
+                                        <p className="xl:text-[17px] lg:text-[15px] sm:text-[13px] text-[11px] font-extralight">
                                             {product.description}
-                                        </span>
+                                        </p>
                                     )}
                                 </div>
 
@@ -159,14 +159,14 @@ export default function ProductDetailsPage({ product }: ProductDetailsProps) {
                                     </div>
                                     <div className="flex flex-col gap-1.5 cursor-pointer"
                                         onClick={() => setShowReviews(!showReviews)}>
-                                        <p className="flex flex-row items-center gap-1 xl:text-lg lg:text-base sm:text-sm text-[12px] font-light">
+                                        <span className="flex flex-row items-center xl:text-lg lg:text-base sm:text-sm text-[12px] font-light">
                                             Reviews
                                             {showReviews ? <MdOutlineKeyboardArrowUp /> : <MdKeyboardArrowDown />}
-                                        </p>
+                                        </span>
                                         {showReviews && (
-                                            <span className="xl:text-[17px] lg:text-[15px] sm:text-[13px] text-[11px] font-extralight">
+                                            <p className="xl:text-[17px] lg:text-[15px] sm:text-[13px] text-[11px] font-extralight">
                                                 No Reviews
-                                            </span>
+                                            </p>
                                         )}
                                     </div>
                                 </div>

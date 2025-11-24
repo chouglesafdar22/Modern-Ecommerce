@@ -16,7 +16,7 @@ function ProductCard({ product }: any) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ type: "spring", duration: 0.4, ease: "anticipate" }}
-            className="group flex flex-row xl:gap-4 lg:gap-3 md:gap-2.5 sm:gap-1.5 gap-0.5 items-center rounded-xl xl:py-3.5 lg:py-3 md:py-2.5 sm:py-2 py-1.5 lg:px-3.5 md:px-2.5 sm:px-1.5 px-1 max:w-[350px] max:xl:w-[480px] xl:h-[250px] h-52 bg-gray-100 font-sans"
+            className="group flex flex-row xl:gap-4 lg:gap-3 md:gap-2.5 sm:gap-1.5 gap-0.5 items-center rounded-xl xl:py-3.5 lg:py-3 md:py-2.5 sm:py-2 py-1.5 lg:px-3.5 md:px-2.5 sm:px-1.5 px-1 max:w-[350px] max:xl:w-[480px] xl:h-[250px] h-52 bg-gray-200 font-sans shadow-gray-100 shadow-sm"
         >
             {/* Image Box */}
             <motion.div

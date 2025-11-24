@@ -130,7 +130,7 @@ export default function Page() {
           <div className="flex md:flex-row flex-col gap-6 w-full max-w-7xl mx-auto">
 
             {/* CATEGORY LIST */}
-            <div className="flex flex-col gap-3 p-4 sticky top-4 md:w-1/5 w-full rounded-xl border border-gray-100 shadow-sm bg-white">
+            <div className="flex flex-col gap-3 p-4 sticky top-4 md:w-1/5 w-full rounded-xl border shadow-gray-100 shadow-sm bg-white">
               {loading ? (
                 <CategorySkeleton />
               ) : (
