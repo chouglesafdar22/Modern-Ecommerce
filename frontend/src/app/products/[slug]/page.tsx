@@ -3,7 +3,14 @@ import ProductDetailsPage from "./ProductDetailsPage";
 
 export const dynamic = "force-dynamic";
 
-export default async function Page({ params }: { params: { slug: string } }) {
+// Custom type — do NOT use Next.js PageProps
+interface PageParams {
+  params: {
+    slug: string;
+  };
+}
+
+export default async function Page({ params }: PageParams) {
   const { slug } = params;
 
   console.log("Full slug:", slug);
@@ -11,7 +18,6 @@ export default async function Page({ params }: { params: { slug: string } }) {
   if (!slug) return <Not_found />;
 
   const id = slug.split("-").pop();
-  console.log("Extracted ID:", id);
 
   if (!id || isNaN(Number(id))) return <Not_found />;
 
