@@ -9,6 +9,8 @@ interface ICartItem {
 export interface ICart extends Document {
     user: mongoose.Schema.Types.ObjectId;
     items: ICartItem[];
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 const cartItemSchema: Schema<ICartItem> = new mongoose.Schema(
@@ -18,7 +20,7 @@ const cartItemSchema: Schema<ICartItem> = new mongoose.Schema(
         price: { type: Number, required: true }
     },
     { _id: true }
-)
+);
 
 const cartSchema: Schema<ICart> = new mongoose.Schema(
     {
@@ -26,7 +28,7 @@ const cartSchema: Schema<ICart> = new mongoose.Schema(
         items: [cartItemSchema]
     },
     { timestamps: true }
-)
+);
 
 const Cart = mongoose.model<ICart>("Cart", cartSchema)
 export default Cart;

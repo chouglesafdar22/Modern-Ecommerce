@@ -8,6 +8,9 @@ import userRoutes from "./routes/userRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
 import productRoutes from "./routes/productRoutes";
 import reviewRoutes from "./routes/reviewRoutes";
+import cartRoutes from "./routes/cartRoutes";
+import orderRoutes from "./routes/orderRoutes";
+import adminRoutes from "./routes/adminStatsRoutes";
 
 dotenv.config();
 connectDB();
@@ -21,10 +24,13 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api/user", userRoutes);
+    app.use("/api/user", userRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/review", reviewRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/order", orderRoutes);
+app.use("/api/admin", adminRoutes);
 
 // middleware
 app.use(notFound);

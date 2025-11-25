@@ -17,11 +17,13 @@ export interface IProduct extends Document {
     brand: string;
     category: mongoose.Schema.Types.ObjectId;
     stock: number;
-    ShippingFee: number;
+    shippingFee: number;
     taxPrice: number;
     reviews: IReview[];
     rating: number;
     numReviews: number;
+    createdAt:Date;
+    updatedAt:Date;
 };
 
 const reviewSchema = new Schema<IReview>(
@@ -45,7 +47,7 @@ const productSchema = new Schema<IProduct>(
         brand: { type: String, required: true },
         category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
         stock: { type: Number, default: 0 },
-        ShippingFee: { type: Number, default: 0 },
+        shippingFee: { type: Number, default: 0 },
         taxPrice: { type: Number, default: 0 },
         reviews: [reviewSchema],
         rating: { type: Number, required: true, default: 0 },
