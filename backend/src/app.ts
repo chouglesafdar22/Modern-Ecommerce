@@ -6,18 +6,23 @@ import dotenv from "dotenv";
 import { notFound, errorHandler } from "./middlewares/errorMiddleware";
 import userRoutes from "./routes/userRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
+import productRoutes from "./routes/productRoutes";
 
 dotenv.config();
 connectDB();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/user", userRoutes);
 app.use("/api/category", categoryRoutes);
+app.use("/api/product", productRoutes);
 
 // middleware
 app.use(notFound);
