@@ -1,10 +1,10 @@
-import mongoose, { Document, Schema, CallbackWithoutResultAndOptionalError } from "mongoose";
+import mongoose, { Document, Schema, CallbackWithoutResultAndOptionalError, Types } from "mongoose";
 
 export interface IReview {
     name: string;
     rating: number;
     comment: string;
-    user: mongoose.Schema.Types.ObjectId;
+    user: Types.ObjectId;
 };
 
 export interface IProduct extends Document {
@@ -66,5 +66,5 @@ const productSchema = new Schema<IProduct>(
     }
 );
 
-
-export default mongoose.model<IProduct>("Product", productSchema);
+const Product = mongoose.model<IProduct>("Product", productSchema);
+export default Product;

@@ -13,4 +13,5 @@ const categorySchema = new mongoose.Schema<ICategory>(
     { timestamps: true }
 );
 
-export default mongoose.model<ICategory>("Category", categorySchema);
+const Category=mongoose.model<ICategory>("Category", categorySchema);
+export default Category;
