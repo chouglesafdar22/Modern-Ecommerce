@@ -12,8 +12,8 @@ import {
 
 const router = express.Router();
 
-router.post("/create", authMiddleware, adminMiddleware, createCategory);
 router.get("/", getCategories);
+router.post("/create", authMiddleware, adminMiddleware, createCategory);
 router.put("/:id", authMiddleware, adminMiddleware, updateCategory);
 router.delete("/:id", authMiddleware, adminMiddleware, deleteCategory);
 

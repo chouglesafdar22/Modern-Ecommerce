@@ -35,20 +35,14 @@ export const getCategories = async (req: Request, res: Response) => {
 // update category (admin only)
 export const updateCategory = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
-        const { name } = req.body;
-
-        const category = await Category.findByIdAndUpdate(
-            id,
-            { name },
-            { new: true }
-        );
-
+        const category = await Category.findById(req.params.id);
         if (!category) {
-            return res.status(404).json({ message: "Category not found" });
+            res.status(400);
+            throw new Error("Category doesn't exists");
         };
-
-        res.status(200).json({ message: "Category updated", category });
+        category.set(req.body);
+        const updatedCategory = await category.save();
+        res.json(updatedCategory);
     } catch (error) {
         res.status(500).json({ message: "Server error" });
     }
@@ -57,15 +51,13 @@ export const updateCategory = async (req: Request, res: Response) => {
 // delete category (admin only)
 export const deleteCategory = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
-
-        const category = await Category.findByIdAndDelete(id);
-
-        if (!category) {
-            return res.status(404).json({ message: "Category not found" });
-        }
-
-        res.status(200).json({ message: "Category deleted" });
+        const categoryExists = await Category.findById(req.params.id);
+        if (!categoryExists) {
+            res.status(400);
+            throw new Error("Category doesn't exists");
+        };
+        await categoryExists.deleteOne();
+        res.json({ message: "Category is deleted" });
     } catch (error) {
         res.status(500).json({ message: "Server error" });
     }

@@ -1,5 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
-import { NextFunction } from "express";
+import mongoose, { Document, Schema, CallbackWithoutResultAndOptionalError } from "mongoose";
 
 export interface IReview {
     name: string;
@@ -55,15 +54,17 @@ const productSchema = new Schema<IProduct>(
     { timestamps: true }
 );
 
-productSchema.pre<IProduct>("save", function (next) {
-    if (this.discountPrice > 0 && this.discountPrice < this.price) {
-        this.isDiscounted = true;
-    } else {
-        this.isDiscounted = false;
+(productSchema as any).pre(
+    "save",
+    function (this: IProduct, next: CallbackWithoutResultAndOptionalError) {
+        if (this.discountPrice > 0 && this.discountPrice < this.price) {
+            this.isDiscounted = true;
+        } else {
+            this.isDiscounted = false;
+        }
+        next();
     }
-    next();
-});
+);
 
 
-const Product = mongoose.model<IProduct>("Product", productSchema);
-export default Product;
+export default mongoose.model<IProduct>("Product", productSchema);
