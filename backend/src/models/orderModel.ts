@@ -18,7 +18,9 @@ export interface IOrder extends Document {
     shippingAddress: {
         address: string;
         city: string;
-        postalCode: string;
+        pinCode: number;
+        district: string;
+        state: string;
         country: string;
     };
     paymentMethod: string;
@@ -40,6 +42,8 @@ export interface IOrder extends Document {
 
     isDelivered: boolean;
     deliveredAt?: Date;
+
+    invoiceUrl?: string,
 
     isReturnRequested: boolean;
     returnRequestedAt?: Date;
@@ -71,7 +75,7 @@ const orderSchema = new Schema<IOrder>(
         shippingAddress: {
             address: { type: String, required: true },
             city: { type: String, required: true },
-            pinCode: { type: String, required: true },
+            pinCode: { type: Number, required: true },
             district: { type: String, required: true },
             State: { type: String, required: true },
             country: { type: String, required: true },
@@ -97,6 +101,8 @@ const orderSchema = new Schema<IOrder>(
 
         isDelivered: { type: Boolean, default: false },
         deliveredAt: Date,
+
+        invoiceUrl: { type: String, default: "" },
 
         isReturnRequested: { type: Boolean, default: false },
         returnRequestedAt: Date,

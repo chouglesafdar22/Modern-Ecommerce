@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import Order from "../models/orderModel";
 import Product from "../models/productModel";
-import { now } from "mongoose";
+import { generateInvoice } from "../utils/generateInvoice";
 
 // create new order
 export const addOrderItems = asyncHandler(async (req: Request, res: Response) => {
@@ -67,7 +67,22 @@ export const addOrderItems = asyncHandler(async (req: Request, res: Response) =>
     });
 
     const createdOrder = await order.save();
-    res.status(201).json(createdOrder);
+
+    const fullOrder = await Order.findById(createdOrder._id)
+        .populate("orderItems.product", "name image")
+        .populate("user", "name email");
+
+
+    if (!fullOrder) {
+        throw new Error("Order not found while generating invoice");
+    }
+
+    const invoiceUrl = generateInvoice(fullOrder, req.user);
+
+    fullOrder.invoiceUrl = invoiceUrl;
+    await fullOrder.save();
+
+    res.status(201).json(fullOrder);
 });
 
 // Get logged-in user's orders
