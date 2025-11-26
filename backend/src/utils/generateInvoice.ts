@@ -60,10 +60,11 @@ export const generateInvoice = (order: any, user: any) => {
         .fontSize(12)
         .text(`Name: ${user.name}`, 350, 195)
         .text(`Email: ${user.email}`, 350, 215)
+        .text(`Phone No: ${user.phoneNumber}`, 350, 235)
         .text(
             `Address: ${order.shippingAddress.address}, ${order.shippingAddress.city} - ${order.shippingAddress.pincode}, ${order.shippingAddress.district}, ${order.shippingAddress.state}, ${order.shippingAddress.country}`,
             350,
-            235,
+            255,
             { width: 200 }
         );
 
