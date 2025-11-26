@@ -6,7 +6,7 @@ import { generateInvoice } from "../utils/generateInvoice";
 
 // create new order
 export const addOrderItems = asyncHandler(async (req: Request, res: Response) => {
-    const { orderItems, shippingAddress, paymentMethod } = req.body;
+    const { orderItems, shippingAddress, phoneNumber, paymentMethod } = req.body;
 
     if (!orderItems || orderItems.length === 0) {
         res.status(400);
@@ -58,6 +58,7 @@ export const addOrderItems = asyncHandler(async (req: Request, res: Response) =>
         user: req.user?._id,
         orderItems: updateOrderItems,
         shippingAddress,
+        phoneNumber,
         paymentMethod,
         itemsPrice,
         taxPrice,

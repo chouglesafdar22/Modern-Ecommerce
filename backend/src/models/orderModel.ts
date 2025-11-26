@@ -23,6 +23,7 @@ export interface IOrder extends Document {
         state: string;
         country: string;
     };
+    phoneNumber: string;
     paymentMethod: string;
     paymentResult?: {
         id: string;
@@ -80,6 +81,8 @@ const orderSchema = new Schema<IOrder>(
             State: { type: String, required: true },
             country: { type: String, required: true },
         },
+
+        phoneNumber: { type: String, required: true },
 
         paymentMethod: { type: String, required: true },
 
