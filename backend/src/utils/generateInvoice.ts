@@ -15,9 +15,9 @@ export const generateInvoice = (order: any, user: any) => {
 
     const companyDetails = {
         name: "FragranceStore",
-        address: "Chiplun, Ratnagiri, Maharashtra, India",
+        address: "Chiplun - 415605, Ratnagiri, Maharashtra, India",
         email: "fragrancestore@gmail.com",
-        gst: "GSTIN: 27ABCDE1234F1Z5 (Sample)"
+        gst: "GSTIN: 27ABCDE1234F1Z5 (Sample Number)"
     };
 
     const logoPath = path.resolve("uploads/logo/company-logo.png");
