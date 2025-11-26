@@ -23,7 +23,7 @@ export interface IOrder extends Document {
         state: string;
         country: string;
     };
-    phoneNumber: string;
+    phoneNumber: number;
     paymentMethod: string;
     paymentResult?: {
         id: string;
@@ -82,7 +82,7 @@ const orderSchema = new Schema<IOrder>(
             country: { type: String, required: true },
         },
 
-        phoneNumber: { type: String, required: true },
+        phoneNumber: { type: Number, required: true },
 
         paymentMethod: { type: String, required: true },
 
