@@ -237,7 +237,7 @@ export default function Page() {
                                 className="w-full border xl:text-base lg:text-sm sm:text-xs text-[10px] px-3 py-2 rounded-md"
                                 placeholder="Country *"
                             />
-                            <div className="w-full flex items-center border rounded">
+                            <div className="w-full flex bg-gray-200 items-center border rounded">
                                 <span className="px-3 py-2 bg-gray-200 text-sm font-medium select-none">
                                     +91
                                 </span>

@@ -24,7 +24,7 @@ export const generateInvoice = (order: any, user: any) => {
 
     // Watermark
     if (fs.existsSync(logoPath)) {
-        doc.opacity(0.3).image(logoPath, 140, 200, { width: 350 }).opacity(1);
+        doc.opacity(0.1).image(logoPath, 140, 200, { width: 350 }).opacity(1);
     }
 
     // Logo top-left

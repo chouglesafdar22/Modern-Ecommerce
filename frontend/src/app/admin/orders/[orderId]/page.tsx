@@ -105,10 +105,10 @@ export default function Page() {
         }
     };
 
-    const approveReturn = async () => {
+    const approveReturn = async (status:boolean) => {
         try {
             setStatusLoading(true);
-            await api.put(`/orders/${orderId}/return`, { isReturned: true });
+            await api.put(`/orders/${orderId}/return`, { isReturned: status });
             toast.success("Return approved");
             fetchOrder();
         } catch (err: any) {
@@ -164,16 +164,6 @@ export default function Page() {
                         >
                             Mark Paid
                         </motion.button>
-                        <motion.button
-                            whileHover={{ scale: 1.01 }}
-                            whileTap={{ scale: 0.99 }}
-                            transition={{ type: "decay", duration: 0.3, ease: "easeInOut" }}
-                            onClick={() => updatePaymentStatus(false)}
-                            disabled={!order.isPaid || statusLoading}
-                            className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-black transition bg-yellow-600 disabled:bg-yellow-400 disabled:cursor-not-allowed cursor-pointer hover:rounded-lg hover:bg-yellow-400"
-                        >
-                            Mark Pending
-                        </motion.button>
                     </div>
 
                     <p className="mt-4">
@@ -192,16 +182,6 @@ export default function Page() {
                         >
                             Mark Delivered
                         </motion.button>
-                        <motion.button
-                            whileHover={{ scale: 1.01 }}
-                            whileTap={{ scale: 0.99 }}
-                            transition={{ type: "decay", duration: 0.3, ease: "easeInOut" }}
-                            onClick={() => updateDeliveryStatus(false)}
-                            disabled={!order.isDelivered || statusLoading}
-                            className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-black transition bg-gray-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer hover:rounded-lg hover:bg-gray-400"
-                        >
-                            Mark Not Delivered
-                        </motion.button>
                     </div>
 
                     <div className="mt-4">
@@ -215,7 +195,7 @@ export default function Page() {
                                 whileHover={{ scale: 1.01 }}
                                 whileTap={{ scale: 0.99 }}
                                 transition={{ type: "decay", duration: 0.3, ease: "easeInOut" }}
-                                onClick={() => approveReturn}
+                                onClick={() => approveReturn(true)}
                                 className="mt-2 w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-black transition bg-red-600 cursor-pointer hover:rounded-lg hover:bg-red-400"
                             >
                                 Approve Return

@@ -11,6 +11,11 @@ function ProductCard({ product }: any) {
         .replace(/[^a-z0-9\s-]/g, "")
         .replace(/\s+/g, "-");
 
+    const createdAtDate = new Date(product.createdAt);
+    const daysDiff = (Date.now() - createdAtDate.getTime()) / (1000 * 60 * 60 * 24);
+    const isNew = daysDiff <= 30;
+    const isOutOfStock = product.stock === 0;
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -36,6 +41,18 @@ function ProductCard({ product }: any) {
 
             {/* Text Section */}
             <div className="flex flex-col gap-2 text-left w-full relative px-1">
+                <div className="flex gap-2 items-center">
+                    {isNew && !isOutOfStock && (
+                        <span className="px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-semibold">
+                            NEW
+                        </span>
+                    )}
+                    {isOutOfStock && (
+                        <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-semibold">
+                            OUT OF STOCK
+                        </span>
+                    )}
+                </div>
                 <h4 className="text-black xl:text-xl lg:text-lg sm:text-base text-sm font-medium line-clamp-2">
                     {product.name}
                 </h4>

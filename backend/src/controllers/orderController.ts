@@ -54,6 +54,21 @@ export const addOrderItems = asyncHandler(async (req: Request, res: Response) =>
 
     const totalPrice = taxPrice + shippingFee + discountPrice;
 
+    for (const item of orderItems) {
+        const product = await Product.findById(item.product);
+
+        if (!product) {
+            throw new Error("Product not found");
+        }
+
+        if (product.stock < item.qty) {
+            throw new Error(`Not enough stock for ${product.name}`);
+        }
+
+        product.stock -= item.qty;
+        await product.save();
+    }
+
     const order = new Order({
         user: req.user?._id,
         orderItems: updateOrderItems,
@@ -160,7 +175,7 @@ export const updateDeliveryStatus = asyncHandler(async (req: any, res: Response)
         return;
     }
 
-    const { isDelivered } = req.body; // true/false
+    const { isDelivered } = req.body;
 
     order.isDelivered = isDelivered;
     order.deliveredAt = isDelivered ? new Date() : undefined;
@@ -226,6 +241,14 @@ export const approveReturn = asyncHandler(async (req: any, res: Response) => {
         res.status(400);
         throw new Error("Return was not requested");
     };
+
+    for (const item of order.orderItems) {
+        const product = await Product.findById(item.product);
+        if (product) {
+            product.stock += item.qty;
+            await product.save();
+        }
+    }
 
     order.isReturned = true;
     order.isReturnRequested = false;
