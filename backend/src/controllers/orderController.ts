@@ -32,7 +32,7 @@ export const addOrderItems = asyncHandler(async (req: Request, res: Response) =>
             const ship = (product.shippingFee || 0) * item.qty;
             const discount = (product.discountPrice || 0) * item.qty;
 
-            const finalPrice = basePrice + tax + ship - discount;
+            const finalPrice = tax + ship + discount;
 
             itemsPrice += basePrice;
             taxPrice += tax;
@@ -52,7 +52,7 @@ export const addOrderItems = asyncHandler(async (req: Request, res: Response) =>
         })
     );
 
-    const totalPrice = itemsPrice + taxPrice + shippingFee - discountPrice;
+    const totalPrice = taxPrice + shippingFee + discountPrice;
 
     const order = new Order({
         user: req.user?._id,
@@ -101,6 +101,76 @@ export const getAllOrders = asyncHandler(async (_req: Request, res: Response) =>
         .populate("orderItems.product", "name");
 
     res.json(orders);
+});
+
+// get ordeer by id
+export const getOrderById = asyncHandler(async (req: any, res: Response) => {
+    const order = await Order.findById(req.params.id)
+        .populate("user", "name email")
+        .populate("orderItems.product", "name price image");
+
+    if (!order) {
+        res.status(404).json({ message: "Order not found" });
+        return;
+    }
+
+    // Users can see only their own orders — admin can see all
+    if (order.user._id.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+        res.status(403).json({ message: "Not authorized to view this order" });
+        return;
+    }
+
+    res.json(order);
+});
+
+// 
+export const updatePaymentStatus = asyncHandler(async (req: any, res: Response) => {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+        res.status(404).json({ message: "Order not found" });
+        return;
+    }
+
+    // Only admin
+    if (req.user.role !== "admin") {
+        res.status(403).json({ message: "Admin only" });
+        return;
+    }
+
+    const { isPaid } = req.body;
+
+    order.isPaid = isPaid;
+    order.paidAt = isPaid ? new Date() : undefined;
+
+    await order.save();
+
+    res.json({
+        message: "Payment status updated",
+        order
+    });
+});
+
+// 
+export const updateDeliveryStatus = asyncHandler(async (req: any, res: Response) => {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+        res.status(404).json({ message: "Order not found" });
+        return;
+    }
+
+    const { isDelivered } = req.body; // true/false
+
+    order.isDelivered = isDelivered;
+    order.deliveredAt = isDelivered ? new Date() : undefined;
+
+    await order.save();
+
+    res.json({
+        message: "Delivery status updated",
+        order
+    });
 });
 
 // request return from user

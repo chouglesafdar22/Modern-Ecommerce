@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "Forgot Password",
+    title: "Forgot-Password Page",
     description: "This is Forgot Password of FragranceStore for User",
 };
 

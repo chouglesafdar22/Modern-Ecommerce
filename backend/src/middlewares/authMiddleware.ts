@@ -5,30 +5,36 @@ import asyncHandler from "express-async-handler";
 
 interface TokenData {
     id: string;
-    role: "user" | "admin"
-};
+    role: "user" | "admin";
+}
 
-export const protect = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization;
+export const protect = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
+    let token;
 
-    if (!authHeader || !authHeader.startsWith("Bearer")) {
+    // ✔ Read JWT from HTTP-ONLY COOKIE
+    if (req.cookies && req.cookies.jwt) {
+        token = req.cookies.jwt;
+    }
+
+    if (!token) {
         res.status(401).json({ message: "Unauthorized: No token provided" });
-        return;
-    };
+        return
+    }
 
-    const token = authHeader.split(" ")[1];
+    // ✔ VERIFY TOKEN
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as TokenData;
-    const user = await User.findById(decoded.id).select("-password");
 
-    if (!user) {
+    // ✔ Attach user to request
+    req.user = await User.findById(decoded.id).select("-password");
+
+    if (!req.user) {
         res.status(401).json({ message: "Unauthorized: User not found" });
-    };
-
-    // attach user to request
-    (req as any).user = user;
+        return
+    }
 
     next();
 });
+
 
 export const admin = (req: Request, res: Response, next: NextFunction) => {
     const user = (req as any).user;

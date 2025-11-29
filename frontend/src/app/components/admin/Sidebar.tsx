@@ -21,8 +21,8 @@ export function Sidebar() {
         { name: "Customers", icon: <TbUsers size={18} />, href: "/admin/customers" },
         { name: "Categories", icon: <TbTags size={18} />, href: "/admin/categories" },
         { name: "Reviews", icon: <TbStars size={18} />, href: "/admin/reviews" },
-        { name: "Coupons", icon: <TbTagStarred size={18} />, href: "/admin/coupons" },
-        { name: "Setting", icon: <TbSettings size={18} />, href: "/admin/setting" },
+        // { name: "Coupons", icon: <TbTagStarred size={18} />, href: "/admin/coupons" },
+        // { name: "Setting", icon: <TbSettings size={18} />, href: "/admin/setting" },
     ];
 
     return (

@@ -8,32 +8,39 @@ import FeaturesCardLayout from "./components/FeatureCardsLayout";
 import { CategorySkeleton } from "../app/components/SkeletonLoading";
 
 interface Product {
-  id: number;
-  title: string;
+  _id: number;
+  name: string;
   price: number;
   image: string;
-  category: string;
-  rating: {
-    rate: number;
-    count: number;
+  category: {
+    _id: string;
+    name: string;
   };
+  rating: string;
+  numReviews: number;
+}
+
+interface Category {
+  _id: string;
+  name: string;
 }
 
 export default function Page() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   const [selectedCategory, setSelectedCategory] = useState("All Products");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Fetch all products
+  // 
   useEffect(() => {
     const loadProducts = async () => {
       try {
         const { data } = await api.get("/products");
-        setProducts(data);
+        setAllProducts(data);
         setFilteredProducts(data);
       } catch (err) {
         setError("Failed to load products.");
@@ -44,72 +51,48 @@ export default function Page() {
     loadProducts();
   }, []);
 
-  // Fetch categories
+  // 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const loadCategories = async () => {
       try {
-        setLoading(true);
-        const { data } = await api.get("/products/categories");
+        const { data } = await api.get("/categories");
         setCategories(data);
-      } catch (error) {
-        console.error("Error fetching categories");
-      } finally {
-        setLoading(false);
+      } catch (err) {
+        console.log("Error fetching categories");
       }
     };
-    fetchCategories();
+    loadCategories();
   }, []);
 
-  // Handle category change
-  const handleCategoryChange = async (categoryName: string) => {
-    setSelectedCategory(categoryName);
-    filterProducts(categoryName, searchQuery);
-    setLoading(true);
-    try {
-      if (categoryName === "All Products") {
-        const { data } = await api.get("/products");
-        setProducts(data);
-        setFilteredProducts(data);
-      } else {
-        const { data } = await api.get(`/products/category/${categoryName}`);
-        setProducts(data);
-        setFilteredProducts(data);
-      }
-    } catch (err) {
-      setError("Failed to load category.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //
+  const applyFilters = (category: string, search: string) => {
+    let updated = [...allProducts];
 
-  // Filter by search only
-  const handleSearch = (value: string) => {
-    setSearchQuery(value);
-    filterProducts(selectedCategory, value);
-    const filtered = products.filter((product) =>
-      product.title.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredProducts(filtered);
-  };
-
-  const filterProducts = (category: string, search: string) => {
-    let updated = [...products];
-    // filter by category
     if (category !== "All Products") {
-      updated = updated.filter((p) => p.category === category);
+      updated = updated.filter((p) => p.category?.name == category);
+      console.log(updated)
     }
-    // filter by search
+
     if (search.trim() !== "") {
       updated = updated.filter((p) =>
-        p.title.toLowerCase().includes(search.toLowerCase())
+        p.name.toLowerCase().includes(search.toLowerCase())
       );
     }
+
     setFilteredProducts(updated);
   };
 
-  useEffect(() => {
-    filterProducts(selectedCategory, searchQuery);
-  }, [products]);
+  // Category filter
+  const handleCategoryChange = (cat: string) => {
+    setSelectedCategory(cat);
+    applyFilters(cat, searchQuery);
+  };
+
+  // Search filter
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
+    applyFilters(selectedCategory, value);
+  };
 
   return (
     <>
@@ -129,7 +112,7 @@ export default function Page() {
 
           <div className="flex md:flex-row flex-col gap-6 w-full max-w-7xl mx-auto">
 
-            {/* CATEGORY LIST */}
+            {/* CATEGORY SIDEBAR */}
             <div className="flex flex-col gap-3 p-4 sticky top-4 md:w-1/5 w-full rounded-xl border shadow-gray-100 shadow-sm bg-white">
               {loading ? (
                 <CategorySkeleton />
@@ -137,14 +120,13 @@ export default function Page() {
                 <>
                   <label
                     className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer ${selectedCategory === "All Products"
-                      ? "bg-black text-white"
-                      : "hover:bg-gray-200"
+                        ? "bg-black text-white"
+                        : "hover:bg-gray-200"
                       }`}
                   >
                     <input
                       type="radio"
                       name="category"
-                      value="All Products"
                       checked={selectedCategory === "All Products"}
                       onChange={() => handleCategoryChange("All Products")}
                     />
@@ -153,20 +135,20 @@ export default function Page() {
 
                   {categories.map((cat) => (
                     <label
-                      key={cat}
-                      className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer capitalize ${selectedCategory === cat
-                        ? "bg-black text-white"
-                        : "hover:bg-gray-200"
+                      key={cat._id}
+                      className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer capitalize ${selectedCategory === cat.name
+                          ? "bg-black text-white"
+                          : "hover:bg-gray-200"
                         }`}
                     >
                       <input
                         type="radio"
                         name="category"
-                        value={cat}
-                        checked={selectedCategory === cat}
-                        onChange={() => handleCategoryChange(cat)}
+                        value={cat.name}
+                        checked={selectedCategory === cat.name}
+                        onChange={() => handleCategoryChange(cat.name)}
                       />
-                      {cat}
+                      {cat.name}
                     </label>
                   ))}
                 </>
@@ -183,17 +165,17 @@ export default function Page() {
                 </div>
               ) : error ? (
                 <div className="flex flex-col items-center justify-center h-96 text-red-700 p-6">
-                  <h2 className="text-2xl font-semibold md:mb-2 mb-1">
-                    Something went wrong!
-                  </h2>
-                  <div className="text-center font-sans text-gray-700 text-xl mt-10"> No products found. </div>
+                  <h2 className="text-2xl font-semibold">Something went wrong!</h2>
+                  <div className="text-gray-700 text-xl mt-10">
+                    No products found.
+                  </div>
                 </div>
               ) : filteredProducts.length === 0 ? (
                 <p className="text-gray-600 text-center">No products found.</p>
               ) : (
-                <div className="grid xl:grid-cols-3 md:grid-cols-2 justify-center items-center text-center grid-cols-1 gap-4">
+                <div className="flex flex-wrap md:justify-normal justify-center gap-4">
                   {filteredProducts.map((item) => (
-                    <ProductCard key={item.id} product={item} />
+                    <ProductCard key={item._id} product={item} />
                   ))}
                 </div>
               )}

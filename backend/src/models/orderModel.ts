@@ -63,7 +63,7 @@ const orderSchema = new Schema<IOrder>(
                 price: { type: Number, required: true },
                 discountPrice: { type: Number, default: 0 },
                 taxPrice: { type: Number, default: 0 },
-                shippingPrice: { type: Number, default: 0 },
+                shippingFee: { type: Number, default: 0 },
                 finalPrice: { type: Number, required: true },
                 product: {
                     type: Schema.Types.ObjectId,
@@ -78,7 +78,7 @@ const orderSchema = new Schema<IOrder>(
             city: { type: String, required: true },
             pinCode: { type: Number, required: true },
             district: { type: String, required: true },
-            State: { type: String, required: true },
+            state: { type: String, required: true },
             country: { type: String, required: true },
         },
 

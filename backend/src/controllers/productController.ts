@@ -2,10 +2,11 @@ import { Request, Response } from "express";
 import Product from "../models/productModel";
 import Category from "../models/categoryModel";
 import asyncHandler from "express-async-handler";
+import slugify from "slugify";
 
 // get all products
 export const getAllProducts = asyncHandler(async (req: Request, res: Response) => {
-    const products = await Product.find().populate("category", "name");
+    const products = await Product.find().populate("category", "name").sort({ createdAt: -1 });
     res.status(200).json(products);
 });
 
@@ -20,26 +21,46 @@ export const getProductById = asyncHandler(async (req: Request, res: Response) =
 
 // create product (admin only)
 export const createProduct = asyncHandler(async (req: Request, res: Response) => {
-    const { name, description, price, discountPrice, image, brand, category, stock, ShippingFee, taxPrice } = req.body;
-    if (!name || !price || !image || !brand || !category) {
-        res.status(400).json({ message: "All required fields missing" });
+    const { name, description, price, discountPrice, brand, category, stock, shippingFee, taxPrice } = req.body;
+
+    if (!name || !req.file || !description || !price || !brand || !category || !stock || !shippingFee || !taxPrice) {
+        res.status(400).json({ message: "All fields are required missing" });
         return;
     };
+
+    const imagePath = `/uploads/products/${req.file.filename}`;
+
+    let slug = slugify(name, { lower: true, strict: true });
+    const exists = await Product.findOne({ slug });
+    if (exists) slug = slug + "-" + Date.now();
+
+    let isDiscounted = false;
+    if (Number(discountPrice) > 0) {
+        if (Number(discountPrice) >= Number(price)) {
+            res.status(400).json({
+                message: "Discount price must be less than actual price",
+            });
+            return;
+        }
+        isDiscounted = true;
+    };
+
     const categoryExists = await Category.findById(category);
     if (!categoryExists) {
-        res.status(400).json({meassage:"Invalid Category Id"});
+        res.status(400).json({ meassage: "Invalid Category Id" });
         return;
     };
     const product = await Product.create({
         name,
+        slug,
         description,
         price,
         discountPrice,
-        image,
+        image: imagePath,
         brand,
         category,
         stock,
-        ShippingFee,
+        shippingFee,
         taxPrice
     });
     res.status(201).json(product);
@@ -52,7 +73,52 @@ export const updateProduct = asyncHandler(async (req: Request, res: Response) =>
         res.status(404);
         throw new Error("Product not found");
     };
-    product.set(req.body);
+    if (req.file) {
+        product.image = `/uploads/products/${req.file.filename}`;
+    }
+
+    const allowedFields = [
+        "name",
+        "description",
+        "price",
+        "discountPrice",
+        "brand",
+        "category",
+        "stock",
+        "shippingFee",
+        "taxPrice",
+        "image"
+    ];
+
+    allowedFields.forEach((field) => {
+        if (req.body[field] !== undefined) {
+            (product as any)[field] = req.body[field];
+        }
+    });
+
+    if (req.body.name && req.body.name !== product.name) {
+        let newSlug = slugify(req.body.name, { lower: true, strict: true });
+        const exists = await Product.findOne({ slug: newSlug });
+
+        if (exists) newSlug += "-" + Date.now();
+
+        product.slug = newSlug;
+    }
+
+    const price = Number(product.price);
+    const discount = Number(product.discountPrice);
+
+    if (discount > 0) {
+        if (discount >= price) {
+            res.status(400).json({ message: "Discount price must be less than actual price" });
+            return
+        }
+        product.isDiscounted = true;
+    } else {
+        product.isDiscounted = false;
+    }
+
+
     const updatedProduct = await product.save();
     res.json(updatedProduct);
 });

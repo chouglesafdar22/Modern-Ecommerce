@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ScrollWrapper from "@/app/components/ScrollWrapper";
 import { motion } from "framer-motion";
+import api from "@/app/utils/axios";
 
 interface LoginForm {
     email: string;
@@ -31,40 +32,26 @@ export default function Page() {
     const onSubmit = async (data: LoginForm) => {
         setIsLoading(true);
         try {
-            const { email, password } = data;
-            // admin login
-            if (
-                email === "ecommerceuiadmin@gmail.com" &&
-                password === "ecommerceuiadmin22"
-            ) {
-                toast.success("Welcome Admin!");
-                localStorage.setItem(
-                    "loggedInUser",
-                    JSON.stringify({ email, role: "admin" })
-                );
-                router.push("/admin");
-                return;
-            }
-            // normal user login
-            const users = JSON.parse(localStorage.getItem("registeredUsers") || "[]");
-            const user = users.find((u: any) => u.email.toLowerCase() === email.toLowerCase());
-            if (!user) {
-                toast.error("User not found! Please sign up first.");
-                return;
-            }
-            if (user.password !== password) {
-                toast.error("Incorrect password!");
-                return;
-            }
-            localStorage.setItem(
-                "loggedInUser",
-                JSON.stringify({ email: user.email, name: user.name, role: "user" })
-            );
-            toast.success("Login Successful!");
+            const res = await api.post("/users/login", {
+                email: data.email,
+                password: data.password
+            });
             reset();
-            router.push("/");
-        } catch (error) {
-            toast.error("Login Failed");
+            const user = res.data;
+            console.log(user);
+            if (user.role === "admin") {
+                toast.success("Admin login successful");
+                router.push("/admin");
+            } else {
+                toast.success(`Welcome back! ${user.name}`);
+                router.push("/");
+            }
+        } catch (error: any) {
+            if (error.response?.data?.message) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error("Login failed");
+            }
         } finally {
             setIsLoading(false);
         }
@@ -73,10 +60,20 @@ export default function Page() {
 
     return (
         <>
-            <ToastContainer />
+            <ToastContainer
+                position="top-center"
+                autoClose={3000}
+                hideProgressBar={true}
+                newestOnTop={true}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                theme="light"
+            />
             <section className="flex justify-center items-center min-h-screen xl:px-7 lg:px-5 md:px-3 sm:px-1 px-0.5 relative lg:pt-20 md:pt-14 sm:pt-10 pt-8 pb-10 bg-white">
                 <ScrollWrapper direction="fade" delay={0.3}>
-                    <div className="flex flex-col w-full md:max-w-md max-w-sm bg-gray-100 text-black rounded-xl p-6 shadow-lg shadow-black">
+                    <div className="flex flex-col w-full md:max-w-md max-w-xs bg-gray-100 text-black rounded-xl p-6 shadow-lg shadow-black">
                         <h1 className="xl:text-2xl lg:text-xl sm:text-base text-sm font-bold text-center mb-6">Welcome Back!</h1>
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                             {/* email */}
@@ -84,7 +81,7 @@ export default function Page() {
                                 <label className="xl:text-lg lg:text-base sm:text-sm text-xs font-medium">Email</label>
                                 <input
                                     type="email"
-                                    placeholder="safdarchougle@gmail.com"
+                                    placeholder="samkhan@gmail.com"
                                     pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
                                     {...register("email", { required: true })}
                                     className="mt-1 w-full ring-gray-500 px-3 py-2 border rounded-lg focus:ring focus:ring-black"

@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema, CallbackWithoutResultAndOptionalError, Types } from "mongoose";
+import mongoose, { Document, Schema, Types } from "mongoose";
 
 export interface IReview {
     name: string;
@@ -9,6 +9,7 @@ export interface IReview {
 
 export interface IProduct extends Document {
     name: string;
+    slug: string;
     description: string;
     price: number;
     discountPrice: number;
@@ -22,8 +23,8 @@ export interface IProduct extends Document {
     reviews: IReview[];
     rating: number;
     numReviews: number;
-    createdAt:Date;
-    updatedAt:Date;
+    createdAt: Date;
+    updatedAt: Date;
 };
 
 const reviewSchema = new Schema<IReview>(
@@ -39,6 +40,7 @@ const reviewSchema = new Schema<IReview>(
 const productSchema = new Schema<IProduct>(
     {
         name: { type: String, required: true },
+        slug: { type: String, unique: true },
         description: { type: String, default: "" },
         price: { type: Number, required: true },
         discountPrice: { type: Number, default: 0 },
@@ -54,18 +56,6 @@ const productSchema = new Schema<IProduct>(
         numReviews: { type: Number, required: true, default: 0 },
     },
     { timestamps: true }
-);
-
-(productSchema as any).pre(
-    "save",
-    function (this: IProduct, next: CallbackWithoutResultAndOptionalError) {
-        if (this.discountPrice > 0 && this.discountPrice < this.price) {
-            this.isDiscounted = true;
-        } else {
-            this.isDiscounted = false;
-        }
-        next();
-    }
 );
 
 const Product = mongoose.model<IProduct>("Product", productSchema);

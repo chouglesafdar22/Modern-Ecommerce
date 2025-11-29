@@ -24,7 +24,7 @@ export default function Navbar() {
                         <div className="leftSide justify-center items-center text-center">
                             <div className="logo justify-center items-center text-center">
                                 <h1 className="xl:text-3xl lg:text-2xl sm:text-xl text-lg text-black font-extrabold font-sans hover:text-gray-500">
-                                    <Link href="/">E-CommerceUI</Link>
+                                    <Link href="/">FragranceStore</Link>
                                 </h1>
                             </div>
                         </div>

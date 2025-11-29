@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "Sign Up Page",
-    description: "This is Sign Up page of FragranceStore for User",
+    title: "Signup Page",
+    description: "This is Sign up page of FragranceStore for User",
 };
 
 export default function SignUpLayout({ children }: { children: React.ReactNode }) {

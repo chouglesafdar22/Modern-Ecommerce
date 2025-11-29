@@ -8,38 +8,31 @@ import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-interface CartItem {
-    id: string | number;
-    title: string;
-    image: string;
-    price: number;
-    quantity: number;
-}
-
-export default function CartSider() {
+export default function Page() {
     const router = useRouter();
-    const { cart, removeFromCart, updateQuantity } = useCart();
-    const subTotal = cart.reduce(
-        (sum: number, item: CartItem) => sum + item.price * item.quantity, 0);
+    const { cart, removeFromCart, updateQuantity, totalPrice } = useCart();
 
-    const handleOrder = () => {
-        const loggedUser = localStorage.getItem("loggedInUser");
-        if (!loggedUser) {
-            toast.error("Please login first to place order");
-            return router.push("/auth/login");
-        }
-        // Save cart items for order page
-        localStorage.setItem("orderItems", JSON.stringify(cart));
-        router.push("/order");
+    const handleCheckout = () => {
+        router.push("/checkout");
     };
 
     return (
         <>
-            <ToastContainer />
+            <ToastContainer
+                position="top-center"
+                autoClose={3000}
+                hideProgressBar={true}
+                newestOnTop={true}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                theme="light"
+            />
             <ScrollWrapper direction="right" ease="easeIn">
                 <section
-                    className={`cartSection font-sans relative lg:pt-[78px] md:pt-16 sm:pt-11 pt-[52px] pb-6 xl:px-7 lg:px-5 md:px-3 sm:px-1 px-0.5 transition-all duration-700 ease-in-ou flex flex-col justify-between`}
-                    style={{ height: "100vh" }}
+                    className={`cartSection h-screen font-sans relative lg:pt-[78px] md:pt-16 sm:pt-11 pt-[52px] pb-6 xl:px-7 lg:px-5 md:px-3 sm:px-1 px-0.5 transition-all duration-700 ease-in-ou flex flex-col justify-between`}
+                // style={{ height: "100vh" }}
                 >
                     {/* Top Header */}
                     <div className="flex justify-between items-center px-4 py-1.5 sticky top-0 bg-white z-10">
@@ -65,42 +58,45 @@ export default function CartSider() {
                             </div>
                         ) : (
                             <div className="flex flex-col gap-2">
-                                {cart.map((item: CartItem, index: number) => (
+                                {cart.map((item) => (
                                     <div
-                                        key={index}
+                                        key={item._id}
                                         className="flex flex-row w-full justify-between items-center border-b border-gray-300 py-3 px-2 rounded-md bg-gray-100"
                                     >
                                         {/* Image */}
                                         <img
-                                            src={item.image}
-                                            alt={item.title}
+                                            src={`http://localhost:5000${item.product.image}`}
+                                            alt={item.product.name}
                                             className="w-14 h-14 object-cover rounded-md"
                                         />
 
                                         {/* Item Info */}
                                         <div className="flex flex-col text-left flex-1 px-3">
                                             <h4 className="font-xl:text-xl lg:text-lg sm:text-base text-sm line-clamp-2">
-                                                {item.title}
+                                                {item.product.name}
                                             </h4>
                                             <p className="text-gray-500 xl:text-lg lg:text-base sm:text-sm text-xs">
-                                                Qty: {item.quantity}
+                                                Qty: {item.qty}
                                             </p>
                                             <p className="font-semibold xl:text-xl lg:text-lg sm:text-base text-sm">
-                                                ${item.price}
+                                                ₹{item.price}
+                                            </p>
+                                            <p className="text-gray-500 xl:text-lg lg:text-base sm:text-sm text-xs">
+                                                (Discount Price will be added in checkout page)
                                             </p>
                                         </div>
 
                                         {/* Quantity + Remove */}
                                         <div className="flex flex-row justify-center items-center gap-1.5">
                                             <QuantitySelector
-                                                initial={item.quantity}
+                                                initial={item.qty}
                                                 min={1}
                                                 onChange={(qty) =>
-                                                    updateQuantity(item.id, qty)
+                                                    updateQuantity(item.product._id, qty)
                                                 }
                                             />
                                             <MdDeleteForever
-                                                onClick={() => removeFromCart(item.id)}
+                                                onClick={() => removeFromCart(item.product._id)}
                                                 className="text-red-500 hover:text-red-700 xl:text-4xl lg:text-3xl sm:text-2xl text-xl cursor-pointer"
                                             />
                                         </div>
@@ -115,9 +111,11 @@ export default function CartSider() {
                             <h6 className="xl:text-xl lg:text-lg sm:text-base text-sm font-medium">
                                 SubTotal:
                             </h6>
-                            <p className="xl:text-xl lg:text-lg sm:text-base text-sm font-semibold">
-                                ${subTotal.toFixed(2)}
-                            </p>
+                            <span>
+                                <p className="xl:text-xl lg:text-lg sm:text-base text-sm font-semibold">
+                                    ₹{totalPrice.toFixed(2)}
+                                </p>
+                            </span>
                         </div>
 
                         <Button
@@ -126,8 +124,8 @@ export default function CartSider() {
                                 ? "bg-gray-700 pointer-events-none cursor-not-allowed"
                                 : ""
                                 }`}
-                            title={"Order"}
-                            onClick={handleOrder}
+                            title={"Checkout"}
+                            onClick={handleCheckout}
                         />
                     </div>
                 </section>

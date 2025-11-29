@@ -6,14 +6,15 @@ import {
     updateProduct,
     deleteProduct
 } from "../controllers/productController";
-import { protect,admin } from "../middlewares/authMiddleware";
+import { protect, admin } from "../middlewares/authMiddleware";
+import { upload } from "../middlewares/uploadMiddleware";
 
-const router=express.Router();
+const router = express.Router();
 
-router.get("/",getAllProducts);
-router.get("/:id",getProductById);
-router.post("/",protect,admin,createProduct);
-router.put("/:id",protect,admin,updateProduct);
-router.delete("/:id",protect,admin,deleteProduct);
+router.get("/", getAllProducts);
+router.get("/:id", getProductById);
+router.post("/", protect, admin, upload.single("image"), createProduct);
+router.put("/:id", protect, admin, upload.single("image"), updateProduct);
+router.delete("/:id", protect, admin, deleteProduct);
 
 export default router;
