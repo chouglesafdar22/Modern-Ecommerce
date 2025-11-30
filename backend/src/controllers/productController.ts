@@ -3,6 +3,23 @@ import Product from "../models/productModel";
 import Category from "../models/categoryModel";
 import asyncHandler from "express-async-handler";
 import slugify from "slugify";
+import cloudinary from "../config/cloudinary";
+
+// 
+const uploadToCloudinary = (file: Express.Multer.File) => {
+    return new Promise<any>((resolve, reject) => {
+        cloudinary.uploader.upload_stream(
+            {
+                folder: "products",
+                resource_type: "image",
+            }, (error, result) => {
+                if (error) return reject(error);
+                resolve(result);
+            }
+        )
+            .end(file.buffer);
+    });
+};
 
 // get all products
 export const getAllProducts = asyncHandler(async (req: Request, res: Response) => {
@@ -28,7 +45,15 @@ export const createProduct = asyncHandler(async (req: Request, res: Response) =>
         return;
     };
 
-    const imagePath = `/uploads/products/${req.file.filename}`;
+    // upload image to Cloudinary
+    let imageUrl = "";
+    try {
+        const uploadResult = await uploadToCloudinary(req.file);
+        imageUrl = uploadResult.secure_url;
+    } catch (err) {
+        res.status(500).json({ message: "Image upload failed" });
+        return;
+    }
 
     let slug = slugify(name, { lower: true, strict: true });
     const exists = await Product.findOne({ slug });
@@ -56,7 +81,7 @@ export const createProduct = asyncHandler(async (req: Request, res: Response) =>
         description,
         price,
         discountPrice,
-        image: imagePath,
+        image: imageUrl,
         brand,
         category,
         stock,
@@ -73,9 +98,17 @@ export const updateProduct = asyncHandler(async (req: Request, res: Response) =>
         res.status(404);
         throw new Error("Product not found");
     };
+
+    // if new image uploaded → upload to Cloudinary & replace url
     if (req.file) {
-        product.image = `/uploads/products/${req.file.filename}`;
-    }
+        try {
+            const uploadResult = await uploadToCloudinary(req.file);
+            product.image = uploadResult.secure_url;
+        } catch (err) {
+            res.status(500).json({ message: "Image upload failed" });
+            return;
+        }
+    };
 
     const allowedFields = [
         "name",
@@ -130,6 +163,18 @@ export const deleteProduct = asyncHandler(async (req: Request, res: Response) =>
         res.status(404);
         throw new Error("Product not found");
     };
+
+    try {
+        if (product.image) {
+            const urlParts = product.image.split("/");
+            const fileName = urlParts[urlParts.length - 1]; 
+            const publicId = "products/" + fileName.split(".")[0];
+            await cloudinary.uploader.destroy(publicId);
+        }
+    } catch (err) {
+        console.warn("Failed to delete image from Cloudinary:", err);
+    }
+
     await product.deleteOne();
     res.json({ message: "Product is deleted" });
 });

@@ -1,14 +1,8 @@
 import multer from "multer";
 import path from "path";
 
-const storage = multer.diskStorage({
-    destination(req, file, cb) {
-        cb(null, "uploads/products");
-    },
-    filename(req, file, cb) {
-        cb(null, Date.now() + "-" + file.originalname);
-    }
-});
+// Store file in memory (not disk)
+const storage = multer.memoryStorage();
 
 const fileFilter = (req: any, file: any, cb: any) => {
     const allowed = [".jpg", ".jpeg", ".png", ".webp"];
@@ -20,4 +14,7 @@ const fileFilter = (req: any, file: any, cb: any) => {
     cb(null, true);
 };
 
-export const upload = multer({ storage, fileFilter });
+export const upload = multer({
+    storage,
+    limits: { fileSize: 5 * 1024 * 1024 }
+});
