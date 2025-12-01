@@ -12,35 +12,24 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
         try {
             const doc = new PDFDocument({ margin: 25 });
 
-            // Hold PDF data in memory
-            let buffers: Buffer[] = [];
+            // STEP 2: Create Cloudinary upload stream
+            const uploadStream = cloudinary.uploader.upload_stream(
+                {
+                    folder: "invoices",
+                    resource_type: "raw",
+                    public_id: `${order._id}`,
+                    format: "pdf",
+                },
+                (error, result) => {
+                    if (error) return reject(error);
 
-            doc.on("data", (chunk) => buffers.push(chunk));
-
-            doc.on("end", async () => {
-                try {
-                    const pdfBuffer = Buffer.concat(buffers);
-
-                    // Upload buffer to Cloudinary
-                    cloudinary.uploader
-                        .upload_stream(
-                            {
-                                folder: "invoices",
-                                public_id: order._id.toString(),
-                                resource_type: "raw",
-                                format: "pdf",
-                            },
-                            (error, result) => {
-                                if (error) return reject(error);
-                                const viewUrl = `${result?.secure_url}?response-content-type=application/pdf`;
-                                resolve(viewUrl);
-                            }
-                        )
-                        .end(pdfBuffer);
-                } catch (err) {
-                    reject(err);
+                    const finalUrl = `${result?.secure_url}?response-content-type=application/pdf`;
+                    resolve(finalUrl);
                 }
-            });
+            );
+
+            // STEP 3: Pipe PDF directly to Cloudinary
+            doc.pipe(uploadStream);
 
             /*
              * ------------------------------------------------------
