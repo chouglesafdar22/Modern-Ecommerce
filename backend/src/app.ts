@@ -26,6 +26,10 @@ app.use(cookieParser());
 
 app.use("/uploads", express.static("uploads"));
 
+app.get("/", (req, res) => {
+  res.send("Backend Server Running Successfully 🚀");
+});
+
 app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
