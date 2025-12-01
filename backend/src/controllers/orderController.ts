@@ -97,7 +97,7 @@ export const addOrderItems = asyncHandler(async (req: Request, res: Response) =>
     fullOrder.invoiceUrl = invoiceUrl;
     await fullOrder.save();
 
-    res.status(201).json(order);
+    res.status(201).json(fullOrder);
 });
 
 // Get logged-in user's orders
