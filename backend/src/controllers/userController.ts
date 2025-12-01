@@ -68,7 +68,7 @@ export const login = async (req: Request, res: Response) => {
         res.cookie("jwt", token, {
             httpOnly: true,
             secure: true,
-            sameSite: "lax",
+            sameSite: "none",
             maxAge: cookieExpires
         });
 
@@ -139,7 +139,7 @@ export const logout = (req: Request, res: Response) => {
     res.cookie("jwt", "", {
         httpOnly: true,
         expires: new Date(0),
-        sameSite: "lax",
+        sameSite: "none",
         secure: true,
     });
 
