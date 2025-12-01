@@ -27,7 +27,7 @@ app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
 
 app.get("/", (req, res) => {
-  res.send("Backend Server Running Successfully 🚀");
+  res.send("Backend Server Running Successfully");
 });
 
 app.use("/api/users", userRoutes);
