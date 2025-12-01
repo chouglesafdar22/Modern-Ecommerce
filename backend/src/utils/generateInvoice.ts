@@ -32,8 +32,8 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
                             },
                             (error, result) => {
                                 if (error) return reject(error);
-                                if (!result?.secure_url) return reject(new Error("Upload failed"));
-                                resolve(result.secure_url);
+                                const viewUrl = `${result?.secure_url}?response-content-type=application/pdf`;
+                                resolve(viewUrl);
                             }
                         )
                         .end(pdfBuffer);
