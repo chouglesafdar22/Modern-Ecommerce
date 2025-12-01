@@ -25,8 +25,8 @@ export default function Button({
 }: ButtonProps) {
     return (
         <motion.button
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", duration: 0.3, ease: "linear" }}
             disabled={disabled}
             onClick={onClick}
@@ -40,8 +40,8 @@ export default function Button({
 export function SecondButton({ href, title, className = "" }: LinkButtonProps) {
     return (
         <motion.button
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", duration: 0.3, ease: "linear" }}
             className={`${className} flex font-sans font-light justify-center cursor-pointer text-center items-center xl:text-2xl lg:text-xl sm:text-lg text-base bg-black text-white w-auto h-auto py-2 px-2.5 rounded-md hover:rounded-lg hover:bg-gray-900 transition-all duration-500 ease-linear`}
         >
@@ -53,8 +53,8 @@ export function SecondButton({ href, title, className = "" }: LinkButtonProps) {
 export function ThirdButton({ href, title, onClick }: LinkButtonProps) {
     return (
         <motion.button
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", duration: 0.3, ease: "linear" }}
             onClick={onClick}
             className="flex font-sans font-light justify-center cursor-pointer text-center items-center xl:text-2xl lg:text-xl sm:text-lg text-base bg-black text-white w-auto h-auto py-2 px-2.5 rounded-md hover:rounded-lg hover:bg-white transition-all duration-500 ease-linear"
