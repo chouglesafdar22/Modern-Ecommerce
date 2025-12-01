@@ -133,7 +133,7 @@ export default function Page() {
                 draggable
                 theme="light"
             />
-            <div className="min-h-screen font-sans relative lg:pt-[78px] md:pt-16 sm:pt-11 pt-[52px] pb-6 xl:px-7 lg:px-5 md:px-3 sm:px-1 px-0.5 bg-gray-50">
+            <div className="min-h-screen font-sans relative lg:pt-20 md:pt-[66px] sm:pt-12 pt-[55px] pb-6 xl:px-7 lg:px-5 md:px-3 sm:px-1 px-0.5 bg-gray-50">
                 <h1 className="xl:text-2xl lg:text-xl sm:text-base text-sm font-bold mb-3">Checkout</h1>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div className="shadow shadow-black rounded-lg md:p-4 p-1.5">
