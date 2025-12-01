@@ -210,7 +210,7 @@ export default function Page() {
                         <label className="block xl:text-lg lg:text-base sm:text-sm text-xs font-medium">Image</label>
                         {oldImage && (
                             <img
-                                src={`http://localhost:5000${oldImage}`}
+                                src={oldImage}
                                 alt="old"
                                 className="w-24 h-24 object-cover rounded mb-2 border"
                             />
