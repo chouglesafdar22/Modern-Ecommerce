@@ -272,7 +272,7 @@ export default function Page() {
                             Back
                         </motion.button>
                         {order.invoiceUrl && (
-                            <Link href={order.invoiceUrl} rel="noopener noreferrer">
+                            <Link href={order.invoiceUrl} target="_blank" rel="noopener noreferrer">
                                 <motion.button
                                     whileHover={{ scale: 1.01 }}
                                     whileTap={{ scale: 0.99 }}

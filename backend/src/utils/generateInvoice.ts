@@ -8,33 +8,35 @@ cloudinary.config({
 });
 
 export const generateInvoice = async (order: any, user: any): Promise<string> => {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
         try {
             const doc = new PDFDocument({ margin: 25 });
+
+            // Hold PDF data in memory
             let buffers: Buffer[] = [];
 
-            // Collect PDF in memory
             doc.on("data", (chunk) => buffers.push(chunk));
 
             doc.on("end", async () => {
                 try {
                     const pdfBuffer = Buffer.concat(buffers);
 
-                    // UPLOAD PDF TO CLOUDINARY USING BASE64 (SAFE)
-                    const base64PDF = `data:application/pdf;base64,${pdfBuffer.toString("base64")}`;
-
-                    const result = await cloudinary.uploader.upload(base64PDF, {
-                        folder: "invoices",
-                        public_id: `${order._id}`,
-                        resource_type: "raw",
-                        format: "pdf"
-                    });
-
-                    if (!result.secure_url) {
-                        return reject("Cloudinary upload failed");
-                    }
-
-                    resolve(result.secure_url);
+                    // Upload buffer to Cloudinary
+                    cloudinary.uploader
+                        .upload_stream(
+                            {
+                                folder: "invoices",
+                                public_id: order._id.toString(),
+                                resource_type: "raw",
+                                format: "pdf",
+                            },
+                            (error, result) => {
+                                if (error) return reject(error);
+                                if (!result?.secure_url) return reject(new Error("Upload failed"));
+                                resolve(result.secure_url);
+                            }
+                        )
+                        .end(pdfBuffer);
                 } catch (err) {
                     reject(err);
                 }
