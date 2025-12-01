@@ -156,7 +156,6 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
             doc.fontSize(10).text("Thank you for shopping with us!", 40, 750, { align: "center" });
 
             doc.end();
-            doc.end();
         } catch (err) {
             reject(err);
         }
