@@ -40,7 +40,7 @@ function ProductCard({ product }: any) {
             </motion.div>
 
             {/* Text Section */}
-            <div className="flex flex-col gap-2 text-left w-full relative px-1">
+            <div className="flex bottom flex-col gap-2 text-left w-full relative px-1">
                 <div className="flex gap-2 items-center">
                     {isNew && !isOutOfStock && (
                         <span className="px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-semibold">

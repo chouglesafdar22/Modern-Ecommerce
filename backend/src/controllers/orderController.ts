@@ -84,20 +84,21 @@ export const addOrderItems = asyncHandler(async (req: Request, res: Response) =>
 
     const createdOrder = await order.save();
 
+    // Populate fields for invoice
     const fullOrder = await Order.findById(createdOrder._id)
-        .populate("orderItems.product", "name image")
-        .populate("user", "name email");
+        .populate("user", "name email")
+        .lean();
 
     if (!fullOrder) {
         throw new Error("Order not found while generating invoice");
     }
 
-    const invoiceUrl: string = await generateInvoice(fullOrder, fullOrder.user);
-    fullOrder.invoiceUrl = invoiceUrl;
+    const invoiceUrl = await generateInvoice(fullOrder, fullOrder.user);
 
-    await fullOrder.save();
+    await Order.findByIdAndUpdate(fullOrder._id, { invoiceUrl }, { new: true });
 
-    res.status(201).json(fullOrder);
+    const updated = await Order.findById(fullOrder._id);
+    res.status(201).json(updated);
 });
 
 // Get logged-in user's orders
