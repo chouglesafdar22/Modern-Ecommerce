@@ -212,7 +212,7 @@ export default function Page() {
                 </div>
 
                 {order.invoiceUrl && (
-                    <Link href={`http://localhost:5000${order.invoiceUrl}`}>
+                    <Link href={order.invoiceUrl}>
                         <motion.button
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
