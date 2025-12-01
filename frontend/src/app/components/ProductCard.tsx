@@ -29,7 +29,7 @@ function ProductCard({ product }: any) {
                 className="relative w-full flex justify-center items-center"
             >
                 <Image
-                    src={`http://localhost:5000${product.image}`}
+                    src={product.image}
                     alt={product.name}
                     width={100}
                     height={100}
