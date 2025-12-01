@@ -44,7 +44,7 @@ export interface IOrder extends Document {
     isDelivered: boolean;
     deliveredAt?: Date;
 
-    invoiceUrl?: string,
+    invoiceUrl: string,
 
     isReturnRequested: boolean;
     returnRequestedAt?: Date;

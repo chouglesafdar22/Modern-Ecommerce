@@ -2,7 +2,7 @@ import PDFDocument from "pdfkit";
 import { v2 as cloudinary } from "cloudinary";
 import streamifier from "streamifier";
 
-export const generateInvoice = async (order: any, user: any) => {
+export const generateInvoice = async (order: any, user: any): Promise<string> => {
     return new Promise(async (resolve, reject) => {
         try {
             // PDF in memory
@@ -17,12 +17,15 @@ export const generateInvoice = async (order: any, user: any) => {
                 cloudinary.uploader.upload_stream(
                     {
                         folder: "invoices",
-                        resource_type: "raw",  // IMPORTANT for PDF
+                        resource_type: "raw",
                         public_id: `${order._id}`,
                         format: "pdf"
                     }, (error, result) => {
                         if (error) return reject(error);
-                        return resolve(result?.secure_url);
+                        if (!result?.secure_url) {
+                            return reject(new Error("Failed to upload invoice: secure_url missing"));
+                        }
+                        return resolve(result.secure_url);
                     }
                 ).end(pdfBuffer);
             });
@@ -159,5 +162,3 @@ export const generateInvoice = async (order: any, user: any) => {
         }
     });
 };
-
-

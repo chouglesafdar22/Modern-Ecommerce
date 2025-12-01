@@ -93,12 +93,11 @@ export const addOrderItems = asyncHandler(async (req: Request, res: Response) =>
         throw new Error("Order not found while generating invoice");
     }
 
-    const invoiceUrl = generateInvoice(fullOrder, req.user);
-
+    const invoiceUrl: string = await generateInvoice(fullOrder, fullOrder.user);
     fullOrder.invoiceUrl = invoiceUrl;
     await fullOrder.save();
 
-    res.status(201).json(fullOrder);
+    res.status(201).json(order);
 });
 
 // Get logged-in user's orders
