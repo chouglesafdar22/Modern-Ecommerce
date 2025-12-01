@@ -22,9 +22,9 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
                 },
                 (error, result) => {
                     if (error) return reject(error);
+                    if (!result?.secure_url) return reject(new Error("No URL returned"));
 
-                    const finalUrl = `${result?.secure_url}?response-content-type=application/pdf`;
-                    resolve(finalUrl);
+                    resolve(result.secure_url + "?response-content-type=application/pdf");
                 }
             );
 

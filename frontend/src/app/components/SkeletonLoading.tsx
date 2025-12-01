@@ -9,7 +9,7 @@ export function ProductCardSkeleton() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
-            className="group flex flex-col xl:gap-5 lg:gap-4 md:gap-3 sm:gap-2 gap-0.5 items-center rounded-xl xl:py-3.5 lg:py-3 md:py-2.5 sm:py-2 py-1.5 lg:px-3 md:px-2 sm:px-1 px-0.5 max-w-[380px] xl:max-w-[480px] xl:h-[270px] h-68 bg-gray-100 font-sans animate-pulse"
+            className="group flex flex-col xl:gap-5 lg:gap-4 md:gap-3 sm:gap-2 gap-0.5 items-center rounded-xl xl:py-3.5 lg:py-3 md:py-2.5 sm:py-2 py-1.5 lg:px-3 md:px-2 sm:px-1 px-0.5 w-[300px] xl:w-[300px] max:xl:h-[400px] max:h-[400px] h-68 bg-gray-100 font-sans animate-pulse"
         >
             {/* Image Placeholder */}
             <div className="relative w-full flex justify-center items-center">
