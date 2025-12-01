@@ -1,43 +1,53 @@
 import PDFDocument from "pdfkit";
 import { v2 as cloudinary } from "cloudinary";
-import streamifier from "streamifier";
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 export const generateInvoice = async (order: any, user: any): Promise<string> => {
     return new Promise(async (resolve, reject) => {
         try {
-            // PDF in memory
             const doc = new PDFDocument({ margin: 25 });
             let buffers: any[] = [];
 
             doc.on("data", buffers.push.bind(buffers));
+
             doc.on("end", async () => {
                 const pdfBuffer = Buffer.concat(buffers);
 
-                // Upload to Cloudinary
+                // Upload PDF Buffer to Cloudinary
                 cloudinary.uploader.upload_stream(
                     {
                         folder: "invoices",
                         resource_type: "raw",
                         public_id: `${order._id}`,
                         format: "pdf"
-                    }, (error, result) => {
+                    },
+                    (error, result) => {
                         if (error) return reject(error);
-                        if (!result?.secure_url) {
-                            return reject(new Error("Failed to upload invoice: secure_url missing"));
-                        }
-                        return resolve(result.secure_url);
+                        if (!result?.secure_url)
+                            return reject(new Error("Cloudinary did not return URL"));
+
+                        resolve(result.secure_url);
                     }
                 ).end(pdfBuffer);
             });
+
+            // ======================
+            //    PDF CONTENT BELOW
+            // ======================
 
             const company = {
                 name: "FragranceStore",
                 address: "Chiplun - 415605, Ratnagiri, Maharashtra, India",
                 email: "fragrancestore@gmail.com",
-                gst: "GSTIN: 27ABCDE1234F1Z5 (Sample Number)"
+                gst: "GSTIN: 27ABCDE1234F1Z5"
             };
 
-            // HEADER
+            // Header
             doc.fontSize(22).text(company.name, 40, 40);
             doc.fontSize(10)
                 .text(company.address, 40, 70)
@@ -46,14 +56,14 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
 
             doc.moveTo(40, 130).lineTo(560, 130).stroke();
 
-            // INVOICE TITLE
+            // Invoice Info
             doc.fontSize(20).text("INVOICE", 40, 150);
             doc.fontSize(12)
                 .text(`Invoice No: INV-${order._id}`, 40, 180)
                 .text(`Order Date: ${new Date(order.createdAt).toDateString()}`, 40, 200)
                 .text(`Payment Method: ${order.paymentMethod}`, 40, 220);
 
-            // BILLING INFO
+            // Billing Info
             doc.fontSize(14).text("Billing Details", 350, 150);
             doc.fontSize(12)
                 .text(`Name: ${user.name}`, 350, 180)
@@ -66,7 +76,7 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
                     { width: 200 }
                 );
 
-            // TABLE HEADER
+            // Table Header
             const tableTop = 300;
             doc.fontSize(12)
                 .text("Product", 40, tableTop)
@@ -79,17 +89,18 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
 
             doc.moveTo(40, tableTop + 20).lineTo(560, tableTop + 20).stroke();
 
-            // ROWS
+            // Rows
             let y = tableTop + 30;
 
             order.orderItems.forEach((item: any) => {
-                const name = item.name || item.product?.name;
-                const price = Number(item.price || item.product?.price || 0);
+                const name = item.name;
+                const price = Number(item.price);
                 const qty = Number(item.qty);
                 const tax = Number(item.taxPrice);
                 const ship = Number(item.shippingFee);
                 const discount = Number(item.discountPrice);
-                const final = Number(item.finalPrice);
+
+                const final = (tax + ship + discount) * qty;
 
                 if (y > 700) {
                     doc.addPage();
@@ -98,25 +109,20 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
 
                 doc.fontSize(11)
                     .text(name, 40, y, { width: 130 })
-                    .text(qty.toString(), 180, y)
-                    // Original price with strikethrough
+                    .text(String(qty), 180, y)
+
+                    // Strikethrough original price
                     .save()
-                    .text(`${price.toFixed(2)}`, 240, y)
+                    .text(price.toFixed(2), 240, y)
                     .moveTo(240, y + 7)
-                    .lineTo(240 + (price.toFixed(2).length * 6), y + 7)
+                    .lineTo(240 + price.toFixed(2).length * 6, y + 7)
                     .stroke()
                     .restore()
-                    // Tax
-                    .text(`${tax.toFixed(2)}`, 310, y)
 
-                    // Shipping
-                    .text(`${ship.toFixed(2)}`, 360, y)
-
-                    // Discount
-                    .text(`${discount.toFixed(2)}`, 430, y)
-
-                    // Final Price
-                    .text(`${final.toFixed(2)}`, 510, y);
+                    .text(tax.toFixed(2), 310, y)
+                    .text(ship.toFixed(2), 360, y)
+                    .text(discount.toFixed(2), 430, y)
+                    .text(final.toFixed(2), 510, y);
 
                 y += 20;
             });
@@ -124,7 +130,7 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
             doc.moveTo(40, y + 10).lineTo(560, y + 10).stroke();
             y += 25;
 
-            // TOTALS
+            // Totals
             doc.fontSize(12)
                 .text("Items Total:", 350, y)
                 .text(`Rs. ${order.itemsPrice.toFixed(2)}`, 500, y)
@@ -140,7 +146,7 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
                 .text(`Rs. ${order.totalPrice.toFixed(2)}`, 500, y + 100);
 
             // Notes
-            doc.fontSize(12).text("Important Notes:", 40, y + 130);
+            doc.fontSize(12).text("Important Notes:", 40, y + 140);
             doc.fontSize(10)
                 .text("• This is a system-generated invoice. No signature required.")
                 .text("• Returns allowed within 3 days after delivery.")
@@ -148,16 +154,16 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
                 .text("• Use GSTIN above for tax claims.");
 
             // Signature
-            const signatureY = 720;
-            doc.moveTo(350, signatureY).lineTo(560, signatureY).stroke();
-            doc.fontSize(10).text("Authorized Signature", 410, signatureY + 5);
+            doc.moveTo(350, 720).lineTo(560, 720).stroke();
+            doc.fontSize(10).text("Authorized Signature", 410, 730);
 
-            // Footer
-            doc.fontSize(10).text("Thank you for shopping with us!", 40, 750, { align: "center" });
+            doc.fontSize(10).text("Thank you for shopping with us!", 40, 760, { align: "center" });
 
             doc.end();
+
         } catch (err) {
             reject(err);
         }
     });
 };
+
