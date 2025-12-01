@@ -239,7 +239,7 @@ export default function Page() {
                             {order.orderItems.map((item, index) => (
                                 <tr key={index} className="border-b">
                                     <td className="px-2 py-2">
-                                        <img src={`http://localhost:5000${item.image}`} className="w-14 h-14 rounded object-cover mx-auto" />
+                                        <img src={item.image} className="w-14 h-14 rounded object-cover mx-auto" />
                                     </td>
                                     <td className="px-2 py-2">{item.name}</td>
                                     <td className="px-2 py-2">{item.qty}</td>

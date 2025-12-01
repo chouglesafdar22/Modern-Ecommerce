@@ -31,7 +31,7 @@ export default function Navbar() {
 
                         {/* Right Side */}
                         <div className="rightSide flex justify-center items-center text-center">
-                            <div className="navLinksRight flex flex-row justify-center items-center text-center md:gap-4 gap-1.5 xl:text-4xl lg:text-3xl sm:text-2xl text-xl text-black font-sans cursor-pointer">
+                            <div className="navLinksRight flex flex-row justify-center items-center text-center md:gap-4 gap-2 xl:text-4xl lg:text-3xl sm:text-[26px] text-[22px] text-black font-sans cursor-pointer">
                                 {cart.length === 0 ? (
                                     <Link href="/cart">
                                         <IoCartOutline className={isActive("/cart")} />

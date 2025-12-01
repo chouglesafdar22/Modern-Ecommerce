@@ -122,7 +122,7 @@ export default function Page() {
                                             >
                                                 <div className="flex items-center gap-3">
                                                     <img
-                                                        src={`http://localhost:5000${item.image}`}
+                                                        src={item.image}
                                                         className="w-12 h-12 rounded object-cover"
                                                     />
                                                     <span className="xl:text-lg lg:text-base sm:text-sm text-xs">{item.name} x {item.qty}</span>

@@ -197,7 +197,7 @@ export default function Page() {
                             className="flex justify-center cursor-pointer items-center w-full xl:px-4 md:px-3 px-1.5 py-3.5"
                         >
                             <Image
-                                src={`http://localhost:5000${product.image}`}
+                                src={product.image}
                                 alt={product.name}
                                 width={250}
                                 height={250}

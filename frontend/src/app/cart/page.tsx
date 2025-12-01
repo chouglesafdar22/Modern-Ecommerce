@@ -65,7 +65,7 @@ export default function Page() {
                                     >
                                         {/* Image */}
                                         <img
-                                            src={`http://localhost:5000${item.product.image}`}
+                                            src={item.product.image}
                                             alt={item.product.name}
                                             className="w-14 h-14 object-cover rounded-md"
                                         />

@@ -197,7 +197,7 @@ export default function Page() {
                         >
                             <div className="flex items-center gap-3">
                                 <img
-                                    src={`http://localhost:5000${item.image}`}
+                                    src={item.image}
                                     className="w-14 h-14 mx-auto rounded object-cover"
                                 />
                                 <span>

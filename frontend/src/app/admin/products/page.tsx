@@ -100,7 +100,7 @@ export default function Page() {
                                     {products.map((p) => (
                                         <tr key={p._id}>
                                             <td className="px-4 py-3 text-center items-center">
-                                                <img src={`http://localhost:5000${p.image}`} alt={p.name} className="mx-auto w-12 h-12 object-cover rounded" />
+                                                <img src={p.image} alt={p.name} className="mx-auto w-12 h-12 object-cover rounded" />
                                             </td>
                                             <td className="px-4 py-3">{p.name}</td>
                                             <td className="px-4 py-3 text-center">{p.price}</td>

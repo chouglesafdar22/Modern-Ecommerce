@@ -140,7 +140,7 @@ export default function Page() {
                         <h2 className="font-semibold xl:text-lg lg:text-base sm:text-sm text-xs md:mb-2 mb-0.5">Your Cart</h2>
                         {cartItems.map((item) => (
                             <div key={item._id} className="flex items-center justify-evenly md:mb-3 mb-1 md:p-2 p-0.5 border rounded-md">
-                                <img src={`http://localhost:5000${item.product.image}`} alt={item.product.name} className="md:w-14 w-8 md:h-14 h-8 object-cover rounded-md" />
+                                <img src={item.product.image} alt={item.product.name} className="md:w-14 w-8 md:h-14 h-8 object-cover rounded-md" />
                                 <div className="flex-1 md:px-3 px-1">
                                     <h3 className="xl:text-base lg:text-sm sm:text-xs text-[10px] font-medium">{item.product.name}</h3>
                                     <p className="xl:text-base lg:text-sm sm:text-xs text-[10px] text-gray-500">Qty: {item.qty}</p>
