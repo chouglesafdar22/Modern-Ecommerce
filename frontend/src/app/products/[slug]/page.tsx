@@ -72,7 +72,7 @@ export default function Page() {
             setProduct(prodRes.data);
             setReviews(revRes.data.reviews || []);
         } catch (err: any) {
-            toast.error(err.response?.data?.message || "Failed to load product");
+            toast.error("Failed to load product");
         } finally {
             setLoading(false);
         }
@@ -104,7 +104,7 @@ export default function Page() {
             if (isOutOfStock) return;
             await addToCart(product._id, quantity);
         } catch (err: any) {
-            toast.error(err.response?.data?.message || "Failed to add to cart");
+            toast.error("Failed to add to cart");
         }
     };
 
@@ -114,7 +114,7 @@ export default function Page() {
             await addToCart(product._id, quantity);
             router.push("/checkout");
         } catch (err: any) {
-            toast.error(err.response?.data?.message || "Failed to start order");
+            toast.error("Failed to start order");
         }
     };
 
@@ -146,9 +146,7 @@ export default function Page() {
             if (err.response?.status === 401) {
                 toast.error("Please login to write a review");
             } else {
-                toast.error(
-                    err.response?.data?.message || "Failed to submit review"
-                );
+                toast.error("Failed to submit review");
             }
         } finally {
             setSubmittingReview(false);

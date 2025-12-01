@@ -88,13 +88,13 @@ export const addOrderItems = asyncHandler(async (req: Request, res: Response) =>
         .populate("orderItems.product", "name image")
         .populate("user", "name email");
 
-
     if (!fullOrder) {
         throw new Error("Order not found while generating invoice");
     }
 
     const invoiceUrl: string = await generateInvoice(fullOrder, fullOrder.user);
     fullOrder.invoiceUrl = invoiceUrl;
+
     await fullOrder.save();
 
     res.status(201).json(fullOrder);
