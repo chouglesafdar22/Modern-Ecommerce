@@ -11,34 +11,40 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
     return new Promise(async (resolve, reject) => {
         try {
             const doc = new PDFDocument({ margin: 25 });
-            let buffers: any[] = [];
+            let buffers: Buffer[] = [];
 
-            doc.on("data", buffers.push.bind(buffers));
+            // Collect PDF in memory
+            doc.on("data", (chunk) => buffers.push(chunk));
 
             doc.on("end", async () => {
-                const pdfBuffer = Buffer.concat(buffers);
+                try {
+                    const pdfBuffer = Buffer.concat(buffers);
 
-                // Upload PDF Buffer to Cloudinary
-                cloudinary.uploader.upload_stream(
-                    {
+                    // UPLOAD PDF TO CLOUDINARY USING BASE64 (SAFE)
+                    const base64PDF = `data:application/pdf;base64,${pdfBuffer.toString("base64")}`;
+
+                    const result = await cloudinary.uploader.upload(base64PDF, {
                         folder: "invoices",
-                        resource_type: "raw",
                         public_id: `${order._id}`,
+                        resource_type: "raw",
                         format: "pdf"
-                    },
-                    (error, result) => {
-                        if (error) return reject(error);
-                        if (!result?.secure_url)
-                            return reject(new Error("Cloudinary did not return URL"));
+                    });
 
-                        resolve(result.secure_url);
+                    if (!result.secure_url) {
+                        return reject("Cloudinary upload failed");
                     }
-                ).end(pdfBuffer);
+
+                    resolve(result.secure_url);
+                } catch (err) {
+                    reject(err);
+                }
             });
 
-            // ======================
-            //    PDF CONTENT BELOW
-            // ======================
+            /*
+             * ------------------------------------------------------
+             *  PDF CONTENT BELOW (same as before)
+             * ------------------------------------------------------
+             */
 
             const company = {
                 name: "FragranceStore",
@@ -47,7 +53,6 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
                 gst: "GSTIN: 27ABCDE1234F1Z5"
             };
 
-            // Header
             doc.fontSize(22).text(company.name, 40, 40);
             doc.fontSize(10)
                 .text(company.address, 40, 70)
@@ -56,14 +61,12 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
 
             doc.moveTo(40, 130).lineTo(560, 130).stroke();
 
-            // Invoice Info
             doc.fontSize(20).text("INVOICE", 40, 150);
             doc.fontSize(12)
                 .text(`Invoice No: INV-${order._id}`, 40, 180)
                 .text(`Order Date: ${new Date(order.createdAt).toDateString()}`, 40, 200)
                 .text(`Payment Method: ${order.paymentMethod}`, 40, 220);
 
-            // Billing Info
             doc.fontSize(14).text("Billing Details", 350, 150);
             doc.fontSize(12)
                 .text(`Name: ${user.name}`, 350, 180)
@@ -76,7 +79,6 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
                     { width: 200 }
                 );
 
-            // Table Header
             const tableTop = 300;
             doc.fontSize(12)
                 .text("Product", 40, tableTop)
@@ -89,7 +91,6 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
 
             doc.moveTo(40, tableTop + 20).lineTo(560, tableTop + 20).stroke();
 
-            // Rows
             let y = tableTop + 30;
 
             order.orderItems.forEach((item: any) => {
@@ -100,7 +101,7 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
                 const ship = Number(item.shippingFee);
                 const discount = Number(item.discountPrice);
 
-                const final = (tax + ship + discount) * qty;
+                const final = (discount + tax + ship) * qty;
 
                 if (y > 700) {
                     doc.addPage();
@@ -111,7 +112,6 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
                     .text(name, 40, y, { width: 130 })
                     .text(String(qty), 180, y)
 
-                    // Strikethrough original price
                     .save()
                     .text(price.toFixed(2), 240, y)
                     .moveTo(240, y + 7)
@@ -130,7 +130,6 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
             doc.moveTo(40, y + 10).lineTo(560, y + 10).stroke();
             y += 25;
 
-            // Totals
             doc.fontSize(12)
                 .text("Items Total:", 350, y)
                 .text(`Rs. ${order.itemsPrice.toFixed(2)}`, 500, y)
@@ -145,19 +144,11 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
                 .text("Grand Total:", 350, y + 100)
                 .text(`Rs. ${order.totalPrice.toFixed(2)}`, 500, y + 100);
 
-            // Notes
-            doc.fontSize(12).text("Important Notes:", 40, y + 140);
-            doc.fontSize(10)
-                .text("• This is a system-generated invoice. No signature required.")
-                .text("• Returns allowed within 3 days after delivery.")
-                .text("• Keep this invoice for warranty & customer service.")
-                .text("• Use GSTIN above for tax claims.");
+            const signatureY = 720;
+            doc.moveTo(350, signatureY).lineTo(560, signatureY).stroke();
+            doc.fontSize(10).text("Authorized Signature", 410, signatureY + 5);
 
-            // Signature
-            doc.moveTo(350, 720).lineTo(560, 720).stroke();
-            doc.fontSize(10).text("Authorized Signature", 410, 730);
-
-            doc.fontSize(10).text("Thank you for shopping with us!", 40, 760, { align: "center" });
+            doc.fontSize(10).text("Thank you for shopping!", 40, 760, { align: "center" });
 
             doc.end();
 
@@ -166,4 +157,3 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
         }
     });
 };
-
