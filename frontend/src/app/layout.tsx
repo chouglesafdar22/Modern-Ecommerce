@@ -18,6 +18,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "FragranceStore",
   description: "A fully functional, responsive, frontend-only E-commerce web application built with Next.js, React, Tailwind CSS, and localStorage for authentication, cart management, and orders.This project simulates a real shopping experience — including signup/login, cart operations, checkout flow, order history, search & filtering, and a basic admin dashboard UI.",
+  icons: {
+    icon: "/favicom.ico",
+    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon.ico"
+  }
 };
 
 export default function RootLayout({
@@ -28,11 +33,6 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <head>
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="manifest" href="/site.webmanifest" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=TASA+Orbiter:wght@400..800&display=swap" />
       </head>
       <body
