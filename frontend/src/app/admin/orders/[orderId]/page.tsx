@@ -41,13 +41,13 @@ interface Order {
     totalPrice: number;
 
     isPaid: boolean;
-    paidAt?: string;
+    paidAt: string;
 
     isShipped: boolean;
-    shippedAt?: string;
+    shippedAt: string;
 
     isDelivered: boolean;
-    deliveredAt?: string;
+    deliveredAt: string;
 
     invoiceUrl?: string;
 

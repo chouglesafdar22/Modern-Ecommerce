@@ -158,35 +158,18 @@ export const updatePaymentStatus = asyncHandler(async (req: any, res: Response) 
     const { isPaid } = req.body;
 
     order.isPaid = isPaid;
-    order.paidAt = isPaid ? new Date() : undefined;
+
+    if (order.isPaid) {
+        order.paidAt = new Date()
+    } else {
+        order.paidAt = undefined
+    }
 
     await order.save();
 
     res.json({
         message: "Payment status updated",
         order
-    });
-});
-
-// 
-export const markOrderDelivered = asyncHandler(async (req: Request, res: Response) => {
-    const order = await Order.findById(req.params.id);
-
-    if (!order) {
-        res.status(404);
-        throw new Error("Order not found");
-    }
-
-    const { isShipped } = req.body;
-
-    order.isShipped = isShipped;
-    order.shippedAt = isShipped ? new Date() : undefined;
-
-    await order.save();
-
-    res.json({
-        message: "Order marked as delivered",
-        order,
     });
 });
 
@@ -199,9 +182,42 @@ export const markOrderShipped = asyncHandler(async (req: Request, res: Response)
         throw new Error("Order not found");
     }
 
+    const { isShipped } = req.body;
+
+    order.isShipped = isShipped
+
+    if (isShipped) {
+        order.shippedAt = new Date();
+    } else {
+        order.shippedAt = undefined;
+    }
+
+    await order.save();
+
+    res.json({
+        message: "Order marked as delivered",
+        order,
+    });
+});
+
+// 
+export const markOrderDelivered = asyncHandler(async (req: Request, res: Response) => {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+        res.status(404);
+        throw new Error("Order not found");
+    }
+
     const { isDelivered } = req.body;
 
-    order.deliveredAt = isDelivered ? new Date() : undefined;
+    order.isDelivered = isDelivered
+
+    if (isDelivered) {
+        order.deliveredAt = new Date();
+    } else {
+        order.deliveredAt = undefined;
+    }
 
     await order.save();
 
