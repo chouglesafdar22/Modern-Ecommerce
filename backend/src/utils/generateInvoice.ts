@@ -16,9 +16,10 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
             const cloudStream = cloudinary.uploader.upload_stream(
                 {
                     folder: "invoices",
-                    resource_type: "raw",
-                    public_id: String(order._id),
-                    format: "pdf"
+                    resource_type: "auto",
+                    type: "upload",
+                    public_id: `${order._id}`,
+                    format: "pdf",
                 },
                 (err, result) => {
                     if (err) return reject(err);
