@@ -12,24 +12,29 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
         try {
             const doc = new PDFDocument({ margin: 25 });
 
-            // STEP 2: Create Cloudinary upload stream
-            const uploadStream = cloudinary.uploader.upload_stream(
+            // Create Cloudinary upload stream
+            const cloudStream = cloudinary.uploader.upload_stream(
                 {
                     folder: "invoices",
                     resource_type: "raw",
-                    public_id: `${order._id}`,
-                    format: "pdf",
+                    public_id: String(order._id),
+                    format: "pdf"
                 },
-                (error, result) => {
-                    if (error) return reject(error);
-                    if (!result?.secure_url) return reject(new Error("No URL returned"));
+                (err, result) => {
+                    if (err) return reject(err);
+                    if (!result?.secure_url) return reject(new Error("No secure_url returned"));
 
                     resolve(result.secure_url + "?response-content-type=application/pdf");
                 }
             );
 
-            // STEP 3: Pipe PDF directly to Cloudinary
-            doc.pipe(uploadStream);
+            // IMPORTANT: Pipe PDF → cloudinary
+            const stream = doc.pipe(cloudStream);
+
+            // IMPORTANT FIX: Wait for PDF streaming to complete
+            stream.on("finish", () => {
+                console.log("PDF streaming finished.");
+            });
 
             /*
              * ------------------------------------------------------

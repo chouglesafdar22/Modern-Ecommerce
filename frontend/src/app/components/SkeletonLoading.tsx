@@ -13,7 +13,7 @@ export function ProductCardSkeleton() {
         >
             {/* Image Placeholder */}
             <div className="relative w-full flex justify-center items-center">
-                <div className="bg-gray-300 rounded-md cursor-pointer xl:w-44 xl:h-[250px] w-32 h-52" />
+                <div className="bg-gray-300 rounded-md cursor-pointer xl:w-44 xl:h-[50px] w-32 h-[50px]" />
             </div>
 
             {/* Text Section Placeholder */}
