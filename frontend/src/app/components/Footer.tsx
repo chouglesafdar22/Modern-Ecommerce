@@ -28,7 +28,7 @@ function Footer() {
                             </div>
                         </div>
                     </div>
-                    <div className='flex flex-col gap-1.5 justify-start items-start text-left'>
+                    <div className='flex flex-col gap-1.5 justify-start items-start text-left px-0'>
                         <h5 className='items-start text-left xl:text-xl lg:text-lg sm:text-base text-sm font-medium'>Links</h5>
                         <Link href={"/"} className='items-start hover:text-blue-600 hover:underline wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
                             Home
