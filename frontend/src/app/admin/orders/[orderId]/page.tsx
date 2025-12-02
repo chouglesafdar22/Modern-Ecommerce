@@ -157,6 +157,15 @@ export default function Page() {
             })
             : "-";
 
+     const formatDate= (date?: string) =>
+        date
+            ? new Date(date).toLocaleString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+            })
+            : "-";
+
     // Decide status label
     let deliveryLabel = "Confirmed";
     if (order.isDelivered) deliveryLabel = "Delivered";
@@ -281,7 +290,7 @@ export default function Page() {
                                 {order.returnPickupDate && (
                                     <p className="text-sm text-gray-700">
                                         Pickup Scheduled:{" "}
-                                        <strong>{formatDateTime(order.returnPickupDate)}</strong>
+                                        <strong>{formatDate(order.returnPickupDate)}</strong>
                                     </p>
                                 )}
 
