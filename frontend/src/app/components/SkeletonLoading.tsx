@@ -13,21 +13,21 @@ export function ProductCardSkeleton() {
         >
             {/* Image Placeholder */}
             <div className="relative w-full flex justify-center items-center">
-                <div className="bg-gray-300 rounded-md cursor-pointer xl:w-44 xl:h-[50px] w-32 h-[50px]" />
+                <div className="bg-gray-300 rounded-md cursor-pointer xl:w-44 xl:h-[75px] w-32 h-[75px]" />
             </div>
 
             {/* Text Section Placeholder */}
             <div className="flex flex-col gap-0.5 text-left w-full relative px-0.5">
-                <div className="h-4 xl:h-6 bg-gray-300 rounded-md w-2/4" />
-                <div className="h-3 xl:h-5 bg-gray-300 rounded-md w-1/3" />
+                <div className="h-4 xl:h-6 bg-gray-300 rounded-md w-3/4" />
+                <div className="h-3 xl:h-5 bg-gray-300 rounded-md w-2/3" />
                 <div className="flex flex-row gap-0.5 items-center">
                     <div className="flex flex-row gap-px">
-                        <div className="h-4 w-4 bg-gray-300 rounded"></div>
-                        <div className="h-4 w-[70px] bg-gray-300 rounded"></div>
+                        <div className="h-4 w-5 bg-gray-300 rounded"></div>
+                        <div className="h-4 w-20 bg-gray-300 rounded"></div>
                     </div>
-                    <div className="h-4 w-4 bg-gray-300 rounded"></div>
+                    <div className="h-4 w-5 bg-gray-300 rounded"></div>
                 </div>
-                <div className="h-7 xl:h-9 cursor-pointer bg-gray-300 rounded-lg w-28 mt-2" />
+                <div className="h-7 xl:h-9 cursor-pointer bg-gray-300 rounded-lg w-32 mt-2" />
             </div>
         </motion.div>
     )

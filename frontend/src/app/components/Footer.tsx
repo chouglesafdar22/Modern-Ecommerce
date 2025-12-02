@@ -28,7 +28,14 @@ function Footer() {
                             </div>
                         </div>
                     </div>
-                    {/* <div className='flex flex-col gap-1.5 justify-start items-start text-left'>
+                    <div className='grid md:grid-cols-3 grid-cols-1 gap-10'>
+                        <div className='flex flex-col gap-1.5 justify-start items-start text-left'>
+                            <h5 className='items-start text-left xl:text-xl lg:text-lg sm:text-base text-sm font-medium'>About</h5>
+                            <p className='items-start wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora eius cum et ipsam incidunt atque nihil sunt itaque perferendis? Aliquid?
+                            </p>
+                        </div>
+                        <div className='flex flex-col gap-1.5 justify-start items-start text-left'>
                         <h5 className='items-start text-left xl:text-xl lg:text-lg sm:text-base text-sm font-medium'>Links</h5>
                         <Link href={"/"} className='items-start hover:text-blue-600 hover:underline wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
                             Home
@@ -36,14 +43,7 @@ function Footer() {
                         <Link href={"/auth/login"} className='items-start hover:text-blue-600 hover:underline wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
                             Login
                         </Link>
-                    </div> */}
-                    <div className='grid md:grid-cols-2 grid-cols-1 gap-10'>
-                        <div className='flex flex-col gap-1.5 justify-start items-start text-left'>
-                            <h5 className='items-start text-left xl:text-xl lg:text-lg sm:text-base text-sm font-medium'>About</h5>
-                            <p className='items-start wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora eius cum et ipsam incidunt atque nihil sunt itaque perferendis? Aliquid?
-                            </p>
-                        </div>
+                    </div>
                         <div className='flex flex-col gap-1.5 justify-start items-start text-left'>
                             <h5 className='items-start text-left xl:text-xl lg:text-lg sm:text-base text-sm font-medium'>Contact</h5>
                             <p className='items-start wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>

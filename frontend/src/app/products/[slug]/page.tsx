@@ -281,7 +281,7 @@ export default function Page() {
                                 />
 
                                 {/* Description*/}
-                                <div className="flex flex-col gap-1.5 cursor-pointer">
+                                <div className="flex flex-col gap-1.5">
                                     <span className="flex flex-row items-center xl:text-lg lg:text-base sm:text-sm text-[12px] font-light">
                                         Description
                                     </span>
