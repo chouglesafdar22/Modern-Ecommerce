@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "FragranceStore",
-  description: "A fully functional, responsive, frontend-only E-commerce web application built with Next.js, React, Tailwind CSS, and localStorage for authentication, cart management, and orders.This project simulates a real shopping experience — including signup/login, cart operations, checkout flow, order history, search & filtering, and a basic admin dashboard UI.",
+  description: "A complete production-ready E-commerce web application built with Next.js, TypeScript, Tailwind CSS, ShadCN UI, Context API, Node.js, Express, MongoDB, Cloudinary, and Render/Vercel deployment.This project includes everything a real online store needs — authentication, admin dashboard, product management, cart, checkout, orders, invoices, returns system, and much more.",
   icons: {
     icon: "/favicom.ico",
     apple: "/apple-touch-icon.png",
