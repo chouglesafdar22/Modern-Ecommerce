@@ -10,7 +10,7 @@ function Footer() {
 
     return (
         <ScrollWrapper direction='fade' ease='linear'>
-            <footer className='flex flex-col bottom-0 relative w-full pt-20 pb-10 px-7 bg-black text-white font-sans gap-4'>
+            <footer className='flex flex-col bottom-0 relative w-full pt-20 pb-10 px-6 bg-black text-white font-sans gap-4'>
                 <div className='grid xl:grid-cols-2 grid-cols-1 gap-4'>
                     <div className='flex flex-col justify-start items-start gap-4'>
                         <h2 className='items-start xl:text-2xl lg:text-xl sm:text-lg text-base font-bold'>FragranceStore</h2>
