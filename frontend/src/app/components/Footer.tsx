@@ -36,15 +36,6 @@ function Footer() {
                             </p>
                         </div>
                         <div className='flex flex-col gap-1.5 justify-start items-start text-left'>
-                        <h5 className='items-start text-left xl:text-xl lg:text-lg sm:text-base text-sm font-medium'>Links</h5>
-                        <Link href={"/"} className='items-start hover:text-blue-600 hover:underline wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
-                            Home
-                        </Link>
-                        <Link href={"/auth/login"} className='items-start hover:text-blue-600 hover:underline wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
-                            Login
-                        </Link>
-                    </div>
-                        <div className='flex flex-col gap-1.5 justify-start items-start text-left'>
                             <h5 className='items-start text-left xl:text-xl lg:text-lg sm:text-base text-sm font-medium'>Contact</h5>
                             <p className='items-start wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
                                 2810 N Church St PMB 48572, Wilmington, Delaware
@@ -55,6 +46,15 @@ function Footer() {
                             <p className='items-start wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
                                 fragrancestore@gmail.in
                             </p>
+                        </div>
+                        <div className='flex flex-col gap-1.5 justify-start items-start text-left'>
+                            <h5 className='items-start text-left xl:text-xl lg:text-lg sm:text-base text-sm font-medium'>Links</h5>
+                            <Link href={"/"} className='items-start hover:text-blue-600 hover:underline wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
+                                Home
+                            </Link>
+                            <Link href={"/auth/login"} className='items-start hover:text-blue-600 hover:underline wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
+                                Login
+                            </Link>
                         </div>
                     </div>
                 </div>
