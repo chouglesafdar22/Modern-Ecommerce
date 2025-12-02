@@ -130,7 +130,7 @@ export default function Page() {
     const approveReturn = async (status: boolean) => {
         try {
             setStatusLoading(true);
-            await api.put(`/orders/${orderId}/return`, { isReturned: status });
+            await api.put(`/orders/${orderId}/return/approve`, { isReturned: status });
             toast.success("Return approved");
             fetchOrder();
         } catch (err: any) {
