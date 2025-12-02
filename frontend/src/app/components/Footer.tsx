@@ -10,8 +10,8 @@ function Footer() {
 
     return (
         <ScrollWrapper direction='fade' ease='linear'>
-            <footer className='flex flex-col bottom-0 relative w-full pt-20 pb-8 px-6 bg-black text-white font-sans gap-4'>
-                <div className='grid xl:grid-cols-2 grid-cols-1 gap-4'>
+            <footer className='flex flex-col bottom-0 relative w-full pt-20 pb-10 px-7 bg-black text-white font-sans gap-4'>
+                <div className='grid xl:grid-cols-3 grid-cols-1 gap-4'>
                     <div className='flex flex-col justify-start items-start gap-4'>
                         <h2 className='items-start xl:text-2xl lg:text-xl sm:text-lg text-base font-bold'>FragranceStore</h2>
                         <p className='items-start xl:text-lg lg:text-base sm:text-sm text-[12px]'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis, omnis.</p>
@@ -28,21 +28,21 @@ function Footer() {
                             </div>
                         </div>
                     </div>
-                    <div className='grid md:grid-cols-3 grid-cols-1 gap-5'>
+                    <div className='flex flex-col gap-1.5 justify-start items-start text-left'>
+                        <h5 className='items-start text-left xl:text-xl lg:text-lg sm:text-base text-sm font-medium'>Links</h5>
+                        <Link href={"/"} className='items-start hover:text-blue-600 hover:underline wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
+                            Home
+                        </Link>
+                        <Link href={"/auth/login"} className='items-start hover:text-blue-600 hover:underline wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
+                            Login
+                        </Link>
+                    </div>
+                    <div className='grid md:grid-cols-2 grid-cols-1 gap-5'>
                         <div className='flex flex-col gap-1.5 justify-start items-start text-left'>
                             <h5 className='items-start text-left xl:text-xl lg:text-lg sm:text-base text-sm font-medium'>About</h5>
                             <p className='items-start wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora eius cum et ipsam incidunt atque nihil sunt itaque perferendis? Aliquid?
                             </p>
-                        </div>
-                        <div className='flex flex-col gap-1.5 justify-start items-start text-left'>
-                            <h5 className='items-start text-left xl:text-xl lg:text-lg sm:text-base text-sm font-medium'>Links</h5>
-                            <Link href={"/"} className='items-start hover:text-blue-600 hover:underline wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
-                                Home
-                            </Link>
-                            <Link href={"/auth/login"} className='items-start hover:text-blue-600 hover:underline wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
-                                Login
-                            </Link>
                         </div>
                         <div className='flex flex-col gap-1.5 justify-start items-start text-left'>
                             <h5 className='items-start text-left xl:text-xl lg:text-lg sm:text-base text-sm font-medium'>Contact</h5>
