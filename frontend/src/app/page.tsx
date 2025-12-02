@@ -158,7 +158,7 @@ export default function Page() {
             {/* PRODUCT GRID */}
             <div className="flex-1">
               {loading ? (
-                <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
+                <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
                   {Array.from({ length: 6 }).map((_, i) => (
                     <ProductCardSkeleton key={i} />
                   ))}
@@ -173,7 +173,7 @@ export default function Page() {
               ) : filteredProducts.length === 0 ? (
                 <p className="text-gray-600 text-center">No products found.</p>
               ) : (
-                <div className="flex flex-wrap md:justify-normal justify-center gap-4">
+                <div className="flex flex-wrap md:justify-normal justify-center gap-5">
                   {filteredProducts.map((item) => (
                     <ProductCard key={item._id} product={item} />
                   ))}
