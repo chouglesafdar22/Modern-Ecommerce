@@ -41,6 +41,9 @@ export interface IOrder extends Document {
     isPaid: boolean;
     paidAt?: Date;
 
+    isShipped: boolean;
+    shippedAt?: Date;
+
     isDelivered: boolean;
     deliveredAt?: Date;
 
@@ -101,6 +104,9 @@ const orderSchema = new Schema<IOrder>(
 
         isPaid: { type: Boolean, default: false },
         paidAt: Date,
+
+        isShipped: { type: Boolean, default: false },
+        shippedAt: Date,
 
         isDelivered: { type: Boolean, default: false },
         deliveredAt: Date,

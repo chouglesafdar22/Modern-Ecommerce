@@ -24,6 +24,9 @@ interface Order {
     isPaid: boolean;
     paidAt?: string;
 
+    isShipped: boolean;
+    shippedAt: string;
+
     isDelivered: boolean;
     deliveredAt?: string;
 
@@ -111,7 +114,7 @@ export default function Page() {
 
     const getExpectedDelivery = (orderDate: string) => {
         const d = new Date(orderDate);
-        d.setDate(d.getDate() + 7);
+        d.setDate(d.getDate() + 6);
         return formatDate(d);
     };
 
@@ -158,7 +161,7 @@ export default function Page() {
                 </div>
 
                 <div className="flex items-center justify-between mb-4">
-                    <p className="font-semibold">Payment Status</p>
+                    <h2 className="font-semibold text-lg mb-2">Payment Status</h2>
                     <span
                         className={`px-3 py-1 rounded text-white ${order.isPaid ? "bg-green-600" : "bg-red-600"
                             }`}
@@ -167,26 +170,41 @@ export default function Page() {
                     </span>
                 </div>
 
-                <div className="flex items-center justify-between mb-6">
-                    <p className="font-semibold">Delivery Status</p>
-                    <span
-                        className={`px-3 py-1 rounded text-white ${order.isDelivered ? "bg-green-600" : "bg-blue-600"
-                            }`}
-                    >
-                        {order.isDelivered ? "Delivered" : "On the way"}
-                    </span>
-                </div>
-                <div className="bg-gray-100 p-3 rounded mb-6">
-                    {!order.isDelivered ? (
-                        <p className="text-gray-700 text-sm">
-                            📦 <strong>Expected Delivery:</strong> {getExpectedDelivery(order.createdAt)}
-                        </p>
-                    ) : (
-                        <p className="text-gray-700 text-sm">
-                            ✅ <strong>Delivered On:</strong> {formatDate(order.deliveredAt || order.createdAt)}
-                        </p>
+                <div className="mb-6 bg-gray-100 p-4 rounded">
+                    <h2 className="font-semibold text-lg mb-2">Delivery Status</h2>
+
+                    {/* 1️⃣ Order Confirmed */}
+                    {!order.isShipped && !order.isDelivered && (
+                        <>
+                            <p className="font-medium text-blue-600">📦 Order Confirmed</p>
+                            <p className="text-sm text-gray-700">
+                                Expected Delivery: <strong>{getExpectedDelivery(order.createdAt)}</strong>
+                            </p>
+                        </>
+                    )}
+
+                    {/* 2️⃣ Shipped */}
+                    {order.isShipped && !order.isDelivered && (
+                        <>
+                            <p className="font-medium text-orange-600">🚚 Shipped — On the way</p>
+                            <p className="text-sm text-gray-700">
+                                Expected Delivery: <strong>{getExpectedDelivery(order.createdAt)}</strong>
+                            </p>
+                        </>
+                    )}
+
+                    {/* 3️⃣ Delivered */}
+                    {order.isDelivered && (
+                        <>
+                            <p className="font-medium text-green-600">✅ Delivered</p>
+                            <p className="text-sm text-gray-700">
+                                Delivered On:{" "}
+                                <strong>{formatDate(order.deliveredAt || order.createdAt)}</strong>
+                            </p>
+                        </>
                     )}
                 </div>
+
 
                 <h2 className="text-lg font-semibold mb-3">Order Items</h2>
                 <div className="space-y-4 mb-6">

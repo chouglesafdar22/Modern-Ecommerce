@@ -80,6 +80,8 @@ export const addOrderItems = asyncHandler(async (req: Request, res: Response) =>
         shippingFee,
         discountPrice,
         totalPrice,
+        isShipped: false,
+        isDelivered: false,
     });
 
     const createdOrder = await order.save();
@@ -167,24 +169,45 @@ export const updatePaymentStatus = asyncHandler(async (req: any, res: Response) 
 });
 
 // 
-export const updateDeliveryStatus = asyncHandler(async (req: any, res: Response) => {
+export const markOrderDelivered = asyncHandler(async (req: Request, res: Response) => {
     const order = await Order.findById(req.params.id);
 
     if (!order) {
-        res.status(404).json({ message: "Order not found" });
-        return;
+        res.status(404);
+        throw new Error("Order not found");
+    }
+
+    const { isShipped } = req.body;
+
+    order.isShipped = isShipped;
+    order.shippedAt = isShipped ? new Date() : undefined;
+
+    await order.save();
+
+    res.json({
+        message: "Order marked as delivered",
+        order,
+    });
+});
+
+// 
+export const markOrderShipped = asyncHandler(async (req: Request, res: Response) => {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+        res.status(404);
+        throw new Error("Order not found");
     }
 
     const { isDelivered } = req.body;
 
-    order.isDelivered = isDelivered;
     order.deliveredAt = isDelivered ? new Date() : undefined;
 
     await order.save();
 
     res.json({
-        message: "Delivery status updated",
-        order
+        message: "Order marked as shipped",
+        order,
     });
 });
 

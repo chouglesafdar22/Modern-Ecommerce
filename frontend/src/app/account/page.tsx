@@ -94,7 +94,7 @@ export default function Page() {
             />
             <div className="min-h-screen font-sans relative lg:pt-[94px] md:pt-[94px] sm:pt-14 pt-16 pb-6 xl:px-7 lg:px-5 md:px-3 sm:px-1 px-0.5 md:max-w-3xl max-w-2xl mx-auto">
                 <div className="flex flex-col justify-center items-center mb-10">
-                    <FaUserCircle className="text-gray-700 xl:text-[80px] lg:text-7xl sm:text-6xl text-5xl mb-3" />
+                    <FaUserCircle className="text-gray-700 xl:text-[85px] lg:text-[76px] sm:text-[65px] text-[53px] mb-3" />
                     <h2 className="xl:text-3xl lg:text-2xl sm:text-xl text-base font-semibold">{user.name}</h2>
                     <p className="text-gray-600 xl:text-3xl lg:text-2xl sm:text-xl text-base font-normal">{user.email}</p>
                 </div>

@@ -14,7 +14,7 @@ interface OrderItem {
     price: number;
     discountPrice: number;
     taxPrice: number;
-    shippingPrice: number;
+    shippingFee: number;
     finalPrice: number;
     product: string;
 };
@@ -42,6 +42,9 @@ interface Order {
 
     isPaid: boolean;
     paidAt?: string;
+
+    isShipped: boolean;
+    shippedAt?: string;
 
     isDelivered: boolean;
     deliveredAt?: string;
@@ -92,6 +95,19 @@ export default function Page() {
         }
     };
 
+    const updateShipmentStatus = async (status: boolean) => {
+        try {
+            setStatusLoading(true);
+            await api.put(`/orders/${orderId}/shipped`, { isShipped: status });
+            toast.success("Shipment status updated");
+            fetchOrder();
+        } catch (err: any) {
+            toast.error(err.response?.data?.message || "Update failed");
+        } finally {
+            setStatusLoading(false);
+        }
+    }
+
     const updateDeliveryStatus = async (status: boolean) => {
         try {
             setStatusLoading(true);
@@ -105,7 +121,7 @@ export default function Page() {
         }
     };
 
-    const approveReturn = async (status:boolean) => {
+    const approveReturn = async (status: boolean) => {
         try {
             setStatusLoading(true);
             await api.put(`/orders/${orderId}/return`, { isReturned: status });
@@ -124,6 +140,22 @@ export default function Page() {
     if (!order)
         return <p className="text-center py-10 text-gray-500">Order not found</p>;
 
+    const formatDateTime = (date?: string) =>
+        date
+            ? new Date(date).toLocaleString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+            })
+            : "-";
+
+    // Decide status label
+    let deliveryLabel = "Confirmed";
+    if (order.isDelivered) deliveryLabel = "Delivered";
+    else if (order.isShipped) deliveryLabel = "Shipped - On the way";
+
     return (
         <>
             <ToastContainer
@@ -140,7 +172,7 @@ export default function Page() {
             <div className="space-y-4 p-4 font-sans">
                 <div className="flex justify-between items-center">
                     <h1 className="xl:text-xl lg:text-lg sm:text-base text-sm font-bold">Order #{order._id.slice(-6)}</h1>
-                    
+
                 </div>
                 <div className="bg-white p-4 rounded shadow">
                     <h2 className="xl:text-2xl lg:text-xl sm:text-lg text-base font-bold pb-5">Order Information</h2>
@@ -166,22 +198,57 @@ export default function Page() {
                         </motion.button>
                     </div>
 
-                    <p className="mt-4">
-                        <strong>Delivery Status:</strong>{" "}
-                        {order.isDelivered ? "Delivered" : "Not Delivered"}
-                    </p>
+                    {/* DELIVERY STATUS & BUTTONS */}
+                    <div className="mt-4">
+                        <p>
+                            <strong>Delivery Status:</strong> {deliveryLabel}
+                        </p>
 
-                    <div className="flex gap-2.5 mt-2">
-                        <motion.button
-                            whileHover={{ scale: 1.01 }}
-                            whileTap={{ scale: 0.99 }}
-                            transition={{ type: "decay", duration: 0.3, ease: "easeInOut" }}
-                            onClick={() => updateDeliveryStatus(true)}
-                            disabled={order.isDelivered || statusLoading}
-                            className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-black transition bg-blue-600 disabled:bg-blue-400 disabled:cursor-not-allowed cursor-pointer hover:rounded-lg hover:bg-blue-400"
-                        >
-                            Mark Delivered
-                        </motion.button>
+                        {/* Dates for shipped / delivered */}
+                        {order.isShipped && !order.isDelivered && (
+                            <p className="text-sm text-gray-600 mt-1">
+                                Shipped At: {formatDateTime(order.shippedAt)}
+                            </p>
+                        )}
+                        {order.isDelivered && (
+                            <p className="text-sm text-gray-600 mt-1">
+                                Delivered At: {formatDateTime(order.deliveredAt)}
+                            </p>
+                        )}
+
+                        <div className="flex gap-2.5 mt-3">
+                            {/* Mark Shipped */}
+                            <motion.button
+                                whileHover={{ scale: 1.01 }}
+                                whileTap={{ scale: 0.99 }}
+                                transition={{
+                                    type: "decay",
+                                    duration: 0.3,
+                                    ease: "easeInOut",
+                                }}
+                                onClick={() => updateShipmentStatus(true)}
+                                disabled={order.isShipped || order.isDelivered || statusLoading}
+                                className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-black transition bg-orange-500 disabled:bg-orange-300 disabled:cursor-not-allowed cursor-pointer hover:rounded-lg hover:bg-orange-400"
+                            >
+                                Mark Shipped
+                            </motion.button>
+
+                            {/* Mark Delivered */}
+                            <motion.button
+                                whileHover={{ scale: 1.01 }}
+                                whileTap={{ scale: 0.99 }}
+                                transition={{
+                                    type: "decay",
+                                    duration: 0.3,
+                                    ease: "easeInOut",
+                                }}
+                                onClick={() => updateDeliveryStatus(true)}
+                                disabled={order.isDelivered || !order.isShipped || statusLoading}
+                                className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-black transition bg-blue-600 disabled:bg-blue-400 disabled:cursor-not-allowed cursor-pointer hover:rounded-lg hover:bg-blue-400"
+                            >
+                                Mark Delivered
+                            </motion.button>
+                        </div>
                     </div>
 
                     <div className="mt-4">
@@ -246,7 +313,7 @@ export default function Page() {
                                     <td className="px-2 py-2">₹{item.price}</td>
                                     <td className="px-2 py-2">₹{item.discountPrice}</td>
                                     <td className="px-2 py-2">₹{item.taxPrice}</td>
-                                    <td className="px-2 py-2">₹{item.shippingPrice}</td>
+                                    <td className="px-2 py-2">₹{item.shippingFee}</td>
                                     <td className="px-2 py-2 font-semibold">₹{item.finalPrice}</td>
                                 </tr>
                             ))}
@@ -262,28 +329,28 @@ export default function Page() {
                     </div>
                 </div>
                 <div className="flex flex-col gap-4 justify-center">
-                        <motion.button
-                            whileHover={{ scale: 1.01 }}
-                            whileTap={{ scale: 0.99 }}
-                            transition={{ type: "decay", duration: 0.3, ease: "easeInOut" }}
-                            onClick={() => router.back()}
-                            className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-black transition bg-white cursor-pointer hover:rounded-lg hover:bg-gray-400"
-                        >
-                            Back
-                        </motion.button>
-                        {order.invoiceUrl && (
-                            <Link href={order.invoiceUrl} target="_blank" rel="noopener noreferrer">
-                                <motion.button
-                                    whileHover={{ scale: 1.01 }}
-                                    whileTap={{ scale: 0.99 }}
-                                    transition={{ type: "decay", duration: 0.3, ease: "easeInOut" }}
-                                    className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-white transition bg-black cursor-pointer hover:rounded-lg hover:bg-gray-900"
-                                >
-                                    View Invoice
-                                </motion.button>
-                            </Link>
-                        )}
-                    </div>
+                    <motion.button
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                        transition={{ type: "decay", duration: 0.3, ease: "easeInOut" }}
+                        onClick={() => router.back()}
+                        className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-black transition bg-white cursor-pointer hover:rounded-lg hover:bg-gray-400"
+                    >
+                        Back
+                    </motion.button>
+                    {order.invoiceUrl && (
+                        <Link href={order.invoiceUrl} target="_blank" rel="noopener noreferrer">
+                            <motion.button
+                                whileHover={{ scale: 1.01 }}
+                                whileTap={{ scale: 0.99 }}
+                                transition={{ type: "decay", duration: 0.3, ease: "easeInOut" }}
+                                className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-white transition bg-black cursor-pointer hover:rounded-lg hover:bg-gray-900"
+                            >
+                                View Invoice
+                            </motion.button>
+                        </Link>
+                    )}
+                </div>
             </div>
         </>
     )
