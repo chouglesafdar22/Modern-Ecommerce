@@ -28,7 +28,7 @@ function Footer() {
                             </div>
                         </div>
                     </div>
-                    <div className='grid md:grid-cols-3 grid-cols-1 gap-10'>
+                    <div className='grid md:grid-cols-3 grid-cols-1 gap-5'>
                         <div className='flex flex-col gap-1.5 justify-start items-start text-left'>
                             <h5 className='items-start text-left xl:text-xl lg:text-lg sm:text-base text-sm font-medium'>About</h5>
                             <p className='items-start wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
