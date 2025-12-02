@@ -247,13 +247,16 @@ export const requestReturn = asyncHandler(async (req: Request, res: Response) =>
     };
 
     const deliveredAt = new Date(order.deliveredAt);
-    const nowDate = new Date();
+    const now = new Date();
+    const diffDays = Math.floor((now.getTime() - deliveredAt.getTime()) / (1000 * 60 * 60 * 24));
 
-    const diffDays = Math.floor((nowDate.getTime() - deliveredAt.getTime()) / (1000 * 60 * 60 * 24));
     if (diffDays >= 3) {
+        order.returnExpires = true
+        order.returnExpiresAt = new Date();
+        await order.save();
         res.status(400);
-        throw new Error("Return period expired. You can return within 3 days of delivery");
-    };
+        throw new Error("Return period expired (3 days)");
+    }
 
     if (order.isReturnRequested) {
         res.status(400);
@@ -263,8 +266,13 @@ export const requestReturn = asyncHandler(async (req: Request, res: Response) =>
     order.isReturnRequested = true;
     order.returnRequestedAt = new Date();
 
+    // Calculate pickup date = +2 days
+    const pickup = new Date();
+    pickup.setDate(pickup.getDate() + 2);
+    order.returnPickupDate = pickup;
+
     await order.save();
-    res.json({ message: "Return requested successfully", order });
+    res.json({ message: "Return requested successfully", pickupDate: pickup, order });
 });
 
 // approve returen(admin only)
@@ -290,6 +298,7 @@ export const approveReturn = asyncHandler(async (req: any, res: Response) => {
     }
 
     order.isReturned = true;
+    order.returnCompletedAt = new Date(); // mark return completed
     order.isReturnRequested = false;
 
     await order.save();

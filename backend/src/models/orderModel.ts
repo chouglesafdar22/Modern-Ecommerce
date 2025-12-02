@@ -51,7 +51,14 @@ export interface IOrder extends Document {
 
     isReturnRequested: boolean;
     returnRequestedAt?: Date;
+
+    returnPickupDate: Date;
+
     isReturned: boolean;
+    returnCompletedAt: Date;
+
+    returnExpires: boolean;
+    returnExpiresAt: Date;
 }
 
 const orderSchema = new Schema<IOrder>(
@@ -115,7 +122,14 @@ const orderSchema = new Schema<IOrder>(
 
         isReturnRequested: { type: Boolean, default: false },
         returnRequestedAt: Date,
+
+        returnPickupDate: Date,
+
         isReturned: { type: Boolean, default: false },
+        returnCompletedAt: Date,
+
+        returnExpires: { type: Boolean, default: false },
+        returnExpiresAt: Date
     },
     { timestamps: true }
 );

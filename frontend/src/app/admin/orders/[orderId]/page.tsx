@@ -309,12 +309,12 @@ export default function Page() {
                                         <img src={item.image} className="w-14 h-14 rounded object-cover mx-auto" />
                                     </td>
                                     <td className="px-2 py-2">{item.name}</td>
-                                    <td className="px-2 py-2">{item.qty}</td>
-                                    <td className="px-2 py-2">₹{item.price}</td>
-                                    <td className="px-2 py-2">₹{item.discountPrice}</td>
-                                    <td className="px-2 py-2">₹{item.taxPrice}</td>
-                                    <td className="px-2 py-2">₹{item.shippingFee}</td>
-                                    <td className="px-2 py-2 font-semibold">₹{item.finalPrice}</td>
+                                    <td className="px-2 py-2 text-center">{item.qty}</td>
+                                    <td className="px-2 py-2 text-center">₹{item.price}</td>
+                                    <td className="px-2 py-2 text-center">₹{item.discountPrice}</td>
+                                    <td className="px-2 py-2 text-center">₹{item.taxPrice}</td>
+                                    <td className="px-2 py-2 text-center">₹{item.shippingFee}</td>
+                                    <td className="px-2 py-2 font-semibold text-center">₹{item.finalPrice}</td>
                                 </tr>
                             ))}
                         </tbody>
