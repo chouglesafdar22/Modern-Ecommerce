@@ -53,7 +53,13 @@ interface Order {
 
     isReturnRequested: boolean;
     returnRequestedAt?: string;
+    returnPickupDate?: string;
+
     isReturned: boolean;
+    returnCompletedAt?: string;
+
+    returnExpires?: boolean;
+    returnExpiresAt?: string;
 
     createdAt: string;
 };
@@ -251,22 +257,58 @@ export default function Page() {
                         </div>
                     </div>
 
-                    <div className="mt-4">
-                        <p>
-                            <strong>Return Requested:</strong>{" "}
-                            {order.isReturnRequested ? "Yes" : "No"}
-                        </p>
+                    <div className="mt-6 bg-white p-4 rounded shadow">
+                        <h2 className="text-lg font-semibold mb-3">Return Management</h2>
 
+                        {/* Return Expired */}
+                        {order.returnExpires && (
+                            <p className="text-red-600 font-medium">
+                                ❌ Return window expired on {formatDateTime(order.returnExpiresAt)}
+                            </p>
+                        )}
+
+                        {/* Return Requested but not completed */}
                         {order.isReturnRequested && !order.isReturned && (
-                            <motion.button
-                                whileHover={{ scale: 1.01 }}
-                                whileTap={{ scale: 0.99 }}
-                                transition={{ type: "decay", duration: 0.3, ease: "easeInOut" }}
-                                onClick={() => approveReturn(true)}
-                                className="mt-2 w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-black transition bg-red-600 cursor-pointer hover:rounded-lg hover:bg-red-400"
-                            >
-                                Approve Return
-                            </motion.button>
+                            <div>
+                                <p className="text-blue-600 font-medium">📩 Return Requested</p>
+
+                                {/* Requested Date */}
+                                <p className="text-sm text-gray-700">
+                                    Requested On: <strong>{formatDateTime(order.returnRequestedAt)}</strong>
+                                </p>
+
+                                {/* Pickup Date */}
+                                {order.returnPickupDate && (
+                                    <p className="text-sm text-gray-700">
+                                        Pickup Scheduled:{" "}
+                                        <strong>{formatDateTime(order.returnPickupDate)}</strong>
+                                    </p>
+                                )}
+
+                                {/* Approve Button */}
+                                <motion.button
+                                    whileHover={{ scale: 1.01 }}
+                                    whileTap={{ scale: 0.99 }}
+                                    transition={{ type: "decay", duration: 0.3, ease: "easeInOut" }}
+                                    onClick={() => approveReturn(true)}
+                                    disabled={statusLoading}
+                                    className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-black transition bg-red-500 cursor-pointer hover:rounded-lg hover:bg-red-400"
+                                >
+                                    Approve Return
+                                </motion.button>
+                            </div>
+                        )}
+
+                        {/* Return Completed */}
+                        {order.isReturned && (
+                            <p className="text-green-600 font-medium">
+                                ✔ Return Completed on <strong>{formatDateTime(order.returnCompletedAt)}</strong>
+                            </p>
+                        )}
+
+                        {/* 4️⃣ No return requested */}
+                        {!order.isReturnRequested && !order.isReturned && !order.returnExpires && (
+                            <p className="text-gray-600">No return request for this order.</p>
                         )}
                     </div>
                 </div>

@@ -179,7 +179,7 @@ export default function Page() {
                 <div className="mb-6 bg-gray-100 p-4 rounded">
                     <h2 className="font-semibold text-lg mb-2">Delivery Status</h2>
 
-                    {/* 1️⃣ Order Confirmed */}
+                    {/* Order Confirmed */}
                     {!order.isShipped && !order.isDelivered && (
                         <>
                             <p className="font-medium text-blue-600">📦 Order Confirmed</p>
@@ -189,7 +189,7 @@ export default function Page() {
                         </>
                     )}
 
-                    {/* 2️⃣ Shipped */}
+                    {/* Shipped */}
                     {order.isShipped && !order.isDelivered && (
                         <>
                             <p className="font-medium text-orange-600">🚚 Shipped — On the way</p>
@@ -199,7 +199,7 @@ export default function Page() {
                         </>
                     )}
 
-                    {/* 3️⃣ Delivered */}
+                    {/*  Delivered */}
                     {order.isDelivered && (
                         <>
                             <p className="font-medium text-green-600">✅ Delivered</p>
@@ -251,14 +251,14 @@ export default function Page() {
                 <div className="bg-gray-100 p-4 rounded mt-6">
                     <h2 className="text-lg font-semibold mb-3">Return Status</h2>
 
-                    {/* 🟥 EXPIRED */}
+                    {/* EXPIRED */}
                     {order.returnExpires && (
                         <p className="text-red-600 font-medium">
                             ❌ Return period expired on {formatDate(order.returnExpiresAt!)}
                         </p>
                     )}
 
-                    {/* 🟦 REQUESTED */}
+                    {/* REQUESTED */}
                     {order.isReturnRequested && !order.isReturned && (
                         <div>
                             <p className="text-blue-600 font-medium">📩 Return Requested</p>
@@ -273,14 +273,14 @@ export default function Page() {
                         </div>
                     )}
 
-                    {/* 🟩 RETURN COMPLETED */}
+                    {/* RETURN COMPLETED */}
                     {order.isReturned && (
                         <p className="text-green-600 font-medium">
                             ✔ Return completed on <strong>{formatDate(order.returnCompletedAt!)}</strong>
                         </p>
                     )}
 
-                    {/* 🟠 SHOW BUTTON ONLY IF RETURN POSSIBLE */}
+                    {/* SHOW BUTTON ONLY IF RETURN POSSIBLE */}
                     {!order.isReturned && !order.isReturnRequested && !order.returnExpires && order.isDelivered && (
                         <motion.button
                             whileHover={{ scale: 1.01 }}
