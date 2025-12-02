@@ -258,6 +258,7 @@ export default function Page() {
                                         onChange={setQuantity}
                                     />
                                     <Button
+                                    className="bg-gray-600"
                                         title={
                                             isOutOfStock
                                                 ? "Out of Stock"
