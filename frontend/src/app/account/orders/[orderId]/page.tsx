@@ -281,13 +281,12 @@ export default function Page() {
                     )}
 
                     {/* 🟠 SHOW BUTTON ONLY IF RETURN POSSIBLE */}
-                    {!order.isReturned && !order.isReturnRequested && !order.returnExpires && (
+                    {!order.isReturned && !order.isReturnRequested && !order.returnExpires && order.isDelivered && (
                         <motion.button
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
                             onClick={handleRequestReturn}
-                            disabled={!order.isDelivered}
-                            className="w-full py-2 mt-3 rounded bg-red-500 text-white disabled:bg-red-300"
+                            className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-black transition bg-red-500 cursor-pointer hover:rounded-lg hover:bg-red-400"
                         >
                             Request Return
                         </motion.button>
