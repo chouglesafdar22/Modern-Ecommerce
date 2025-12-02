@@ -23,9 +23,8 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
                 },
                 (err, result) => {
                     if (err) return reject(err);
-                    if (!result?.secure_url) return reject(new Error("No secure_url returned"));
-
-                    resolve(result.secure_url + "?response-content-type=application/pdf");
+                    if (!result?.secure_url) return reject("Cloudinary did not return URL");
+                    resolve(result.secure_url);
                 }
             );
 
