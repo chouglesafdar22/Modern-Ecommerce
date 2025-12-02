@@ -255,4 +255,4 @@ Deploying full-stack apps (Render + Vercel)
     npm run dev
 
     Then open:
-    http://localhost:3000
+    http://localhost:5000
