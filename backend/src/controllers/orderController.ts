@@ -115,7 +115,8 @@ export const getMyOrders = asyncHandler(async (req: any, res: Response) => {
 export const getAllOrders = asyncHandler(async (_req: Request, res: Response) => {
     const orders = await Order.find({})
         .populate("user", "id name email")
-        .populate("orderItems.product", "name");
+        .populate("orderItems.product", "name")
+        .sort({ createdAt: -1 });
 
     res.json(orders);
 });
