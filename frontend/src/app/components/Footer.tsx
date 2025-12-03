@@ -35,7 +35,7 @@ function Footer() {
                                 A complete production-ready E-commerce web application Project built with Next.js, TypeScript, Tailwind CSS, ShadCN UI, Context API, Node.js, Express, MongoDB, Cloudinary, and Render/Vercel deployment - Project by Safdar Chougle
                             </p>
                         </div>
-                        <div className='flex flex-col gap-1.5 justify-start lg:items-start items-center lg:text-center text-left px-0'>
+                        <div className='flex flex-col gap-1.5 justify-start items-start lg:text-center text-left px-0'>
                             <h5 className='items-start text-left xl:text-xl lg:text-lg sm:text-base text-sm font-medium'>Links</h5>
                             <Link href={"/"} className='items-start hover:text-blue-600 hover:underline wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
                                 Home
