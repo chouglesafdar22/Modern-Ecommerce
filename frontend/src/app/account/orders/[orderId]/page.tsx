@@ -248,51 +248,54 @@ export default function Page() {
                     </Link>
                 )}
 
-                {/* EXPIRED */}
-                {order.returnExpires && (
-                    <div className="bg-gray-100 p-4 rounded mt-6">
-                        <h2 className="text-lg font-semibold mb-3">Return Status</h2>
+                {/* Return*/}
+                <div className="bg-gray-100 p-4 rounded mt-6">
+                    <h2 className="text-lg font-semibold mb-3">Return Status</h2>
 
+                    {/* expired */}
+                    {order.returnExpires ? (
                         <p className="text-red-600 font-medium">
                             ❌ Return period expired on {formatDate(order.returnExpiresAt!)}
                         </p>
+                    )
+                        : (
+                            <>
+                                {/* REQUESTED */}
+                                {order.isReturnRequested && !order.isReturned && (
+                                    <div>
+                                        <p className="text-blue-600 font-medium">📩 Return Requested</p>
+                                        <p className="text-sm text-gray-700">
+                                            Requested On: <strong>{formatDate(order.returnRequestedAt!)}</strong>
+                                        </p>
+                                        {order.returnPickupDate && (
+                                            <p className="text-sm text-gray-700">
+                                                Pickup Scheduled: <strong>{formatDate(order.returnPickupDate)}</strong>
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
 
-
-                        {/* REQUESTED */}
-                        {order.isReturnRequested && !order.isReturned && (
-                            <div>
-                                <p className="text-blue-600 font-medium">📩 Return Requested</p>
-                                <p className="text-sm text-gray-700">
-                                    Requested On: <strong>{formatDate(order.returnRequestedAt!)}</strong>
-                                </p>
-                                {order.returnPickupDate && (
-                                    <p className="text-sm text-gray-700">
-                                        Pickup Scheduled: <strong>{formatDate(order.returnPickupDate)}</strong>
+                                {/* RETURN COMPLETED */}
+                                {order.isReturned && (
+                                    <p className="text-green-600 font-medium">
+                                        ✔ Return completed on <strong>{formatDate(order.returnCompletedAt!)}</strong>
                                     </p>
                                 )}
-                            </div>
-                        )}
 
-                        {/* RETURN COMPLETED */}
-                        {order.isReturned && (
-                            <p className="text-green-600 font-medium">
-                                ✔ Return completed on <strong>{formatDate(order.returnCompletedAt!)}</strong>
-                            </p>
+                                {/* SHOW BUTTON ONLY IF RETURN POSSIBLE */}
+                                {!order.isReturned && !order.isReturnRequested && !order.returnExpires && order.isDelivered && (
+                                    <motion.button
+                                        whileHover={{ scale: 1.01 }}
+                                        whileTap={{ scale: 0.99 }}
+                                        onClick={handleRequestReturn}
+                                        className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-black transition bg-red-500 cursor-pointer hover:rounded-lg hover:bg-red-400"
+                                    >
+                                        Request Return
+                                    </motion.button>
+                                )}
+                            </>
                         )}
-
-                        {/* SHOW BUTTON ONLY IF RETURN POSSIBLE */}
-                        {!order.isReturned && !order.isReturnRequested && !order.returnExpires && order.isDelivered && (
-                            <motion.button
-                                whileHover={{ scale: 1.01 }}
-                                whileTap={{ scale: 0.99 }}
-                                onClick={handleRequestReturn}
-                                className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-black transition bg-red-500 cursor-pointer hover:rounded-lg hover:bg-red-400"
-                            >
-                                Request Return
-                            </motion.button>
-                        )}
-                    </div>
-                )}
+                </div>
             </div>
         </>
     )
