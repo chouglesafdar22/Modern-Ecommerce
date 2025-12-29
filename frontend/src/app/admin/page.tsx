@@ -82,7 +82,7 @@ export default function AdminDashboard() {
                                 <CardTitle className="xl:text-xl lg:text-lg sm:text-base text-sm font-bold">Monthly Sales Record</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="xl:text-xl lg:text-lg sm:text-base text-sm font-bold">{stats.monthlySales.length}</p>
+                                <p className="xl:text-xl lg:text-lg sm:text-base text-sm font-bold">{stats.monthlySales}</p>
                             </CardContent>
                         </Card>
                         <Card className="bg-gray-300 drop-shadow-lg text-center drop-shadow-gray-500 gap-2">
