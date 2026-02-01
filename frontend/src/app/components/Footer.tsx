@@ -43,7 +43,7 @@ function Footer() {
                             <Link href={"/auth/login"} className='items-start hover:text-blue-600 hover:underline wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
                                 Login
                             </Link>
-                            <Link href={"/auth/account"} className='items-start hover:text-blue-600 hover:underline wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
+                            <Link href={"/account"} className='items-start hover:text-blue-600 hover:underline wrap-break-word text-left xl:text-lg lg:text-base sm:text-sm text-[12px]'>
                                 Account
                             </Link>
                         </div>

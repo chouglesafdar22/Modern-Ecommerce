@@ -236,7 +236,7 @@ export default function Page() {
                 </div>
 
                 {order.invoiceUrl && (
-                    <Link href={order.invoiceUrl}>
+                    <a href={order.invoiceUrl}>
                         <motion.button
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
@@ -245,7 +245,7 @@ export default function Page() {
                         >
                             View Invoice
                         </motion.button>
-                    </Link>
+                    </a>
                 )}
 
                 {/* Return*/}

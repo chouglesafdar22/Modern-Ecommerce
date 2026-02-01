@@ -97,6 +97,10 @@ export const addOrderItems = asyncHandler(async (req: Request, res: Response) =>
 
     const invoiceUrl = await generateInvoice(fullOrder, fullOrder.user);
 
+    if (!invoiceUrl) {
+        throw new Error("Invoice generation failed");
+    };
+
     await Order.findByIdAndUpdate(fullOrder._id, { invoiceUrl }, { new: true });
 
     const updated = await Order.findById(fullOrder._id);

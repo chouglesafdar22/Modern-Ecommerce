@@ -108,7 +108,8 @@ export default function Page() {
 
             router.push(`/account/orders/${res.data._id}`);
         } catch (err: any) {
-            toast.error(err.response?.data?.message || "Order failed");
+            toast.error("Order failed");
+            console.log(err)
         }
     };
 
