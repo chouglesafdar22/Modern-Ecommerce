@@ -65,7 +65,7 @@ export const addOrderItems = asyncHandler(async (req: Request, res: Response) =>
     let couponDiscountAmount = 0;
 
     if (orderCouponId) {
-        const coupon = await orderCoupon.findOne({ orderCouponId });
+        const coupon = await orderCoupon.findById(orderCouponId);
 
         if (!coupon) {
             throw new Error("Invalid coupon");
