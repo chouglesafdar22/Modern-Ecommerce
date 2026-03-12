@@ -4,7 +4,6 @@ import api from "@/app/utils/axios";
 import { useRouter, useParams } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Link from "next/link";
 import { motion } from "framer-motion";
 
 interface OrderItem {
@@ -19,6 +18,11 @@ interface Order {
     createdAt: string;
     orderItems: OrderItem[];
     totalPrice: number;
+
+    itemsPrice: number;
+    taxPrice: number;
+    shippingFee: number;
+    discountPrice: number;
 
     paymentMethod: string;
     isPaid: boolean;
@@ -52,6 +56,11 @@ interface Order {
     };
 
     phoneNumber: number;
+
+    orderCouponId?: {
+        code: string;
+        discountPercent: number;
+    };
 
     user: {
         name: string;
@@ -235,8 +244,56 @@ export default function Page() {
                     ))}
                 </div>
 
+                <div className="bg-gray-100 p-4 rounded mt-6">
+                    <h2 className="text-lg font-semibold mb-3">Order Summary</h2>
+
+                    <div className="flex justify-between text-sm mb-1">
+                        <span>Items Price</span>
+                        <span>₹{order.itemsPrice?.toFixed(2)}</span>
+                    </div>
+
+                    <div className="flex justify-between text-sm mb-1">
+                        <span>Tax</span>
+                        <span>₹{order.taxPrice?.toFixed(2)}</span>
+                    </div>
+
+                    <div className="flex justify-between text-sm mb-1">
+                        <span>Shipping Fee</span>
+                        <span>₹{order.shippingFee?.toFixed(2)}</span>
+                    </div>
+
+                    {/* PRODUCT DISCOUNT */}
+                    {/* {order.discountPrice > 0 && (
+                        <div className="flex justify-between text-sm text-green-700 mb-1">
+                            <span>Product Discount</span>
+                            <span>- ₹{order.discountPrice?.toFixed(2)}</span>
+                        </div>
+                    )} */}
+
+                    {/* COUPON DISCOUNT */}
+                    {/* {order.orderCouponId && (
+                        <div className="flex justify-between text-sm text-green-700 mb-2">
+                            <span>
+                                Coupon ({order.orderCouponId.code})
+                            </span>
+                            <span>
+                                -{order.orderCouponId.discountPercent}%
+                            </span>
+                        </div>
+                    )} */}
+
+                    <div className="border-t pt-2 flex justify-between font-bold text-base">
+                        <span>Grand Total</span>
+                        <span>₹{order.totalPrice?.toFixed(2)}</span>
+                    </div>
+                </div>
+
                 {order.invoiceUrl && (
-                    <a href={order.invoiceUrl}>
+                    <a
+                        href={`${process.env.NEXT_PUBLIC_API_URL}/orders/${order._id}/invoice`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
                         <motion.button
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
@@ -248,54 +305,54 @@ export default function Page() {
                     </a>
                 )}
 
-                {/* Return*/}
-                <div className="bg-gray-100 p-4 rounded mt-6">
-                    <h2 className="text-lg font-semibold mb-3">Return Status</h2>
+                {/* order return */}
 
-                    {/* expired */}
-                    {order.returnExpires ? (
+                {/* expired */}
+                {order.returnExpires ? (
+                    <div className="bg-gray-100 p-4 rounded mt-6">
+                        <h2 className="text-lg font-semibold mb-3">Return Status</h2>
                         <p className="text-red-600 font-medium">
                             ❌ Return period expired on {formatDate(order.returnExpiresAt!)}
                         </p>
-                    )
-                        : (
-                            <>
-                                {/* REQUESTED */}
-                                {order.isReturnRequested && !order.isReturned && (
-                                    <div>
-                                        <p className="text-blue-600 font-medium">📩 Return Requested</p>
-                                        <p className="text-sm text-gray-700">
-                                            Requested On: <strong>{formatDate(order.returnRequestedAt!)}</strong>
-                                        </p>
-                                        {order.returnPickupDate && (
-                                            <p className="text-sm text-gray-700">
-                                                Pickup Scheduled: <strong>{formatDate(order.returnPickupDate)}</strong>
-                                            </p>
-                                        )}
-                                    </div>
-                                )}
-
-                                {/* RETURN COMPLETED */}
-                                {order.isReturned && (
-                                    <p className="text-green-600 font-medium">
-                                        ✔ Return completed on <strong>{formatDate(order.returnCompletedAt!)}</strong>
+                    </div>
+                ) : (
+                    <div className="bg-gray-100 p-4 rounded mt-6">
+                        <h2 className="text-lg font-semibold mb-3">Return Status</h2>
+                        {/* REQUESTED */}
+                        {order.isReturnRequested && !order.isReturned && (
+                            <div>
+                                <p className="text-blue-600 font-medium">📩 Return Requested</p>
+                                <p className="text-sm text-gray-700">
+                                    Requested On: <strong>{formatDate(order.returnRequestedAt!)}</strong>
+                                </p>
+                                {order.returnPickupDate && (
+                                    <p className="text-sm text-gray-700">
+                                        Pickup Scheduled: <strong>{formatDate(order.returnPickupDate)}</strong>
                                     </p>
                                 )}
-
-                                {/* SHOW BUTTON ONLY IF RETURN POSSIBLE */}
-                                {!order.isReturned && !order.isReturnRequested && !order.returnExpires && order.isDelivered && (
-                                    <motion.button
-                                        whileHover={{ scale: 1.01 }}
-                                        whileTap={{ scale: 0.99 }}
-                                        onClick={handleRequestReturn}
-                                        className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-black transition bg-red-500 cursor-pointer hover:rounded-lg hover:bg-red-400"
-                                    >
-                                        Request Return
-                                    </motion.button>
-                                )}
-                            </>
+                            </div>
                         )}
-                </div>
+
+                        {/* RETURN COMPLETED */}
+                        {order.isReturned && (
+                            <p className="text-green-600 font-medium">
+                                ✔ Return completed on <strong>{formatDate(order.returnCompletedAt!)}</strong>
+                            </p>
+                        )}
+
+                        {/* SHOW BUTTON ONLY IF RETURN POSSIBLE */}
+                        {!order.isReturned && !order.isReturnRequested && !order.returnExpires && order.isDelivered && (
+                            <motion.button
+                                whileHover={{ scale: 1.01 }}
+                                whileTap={{ scale: 0.99 }}
+                                onClick={handleRequestReturn}
+                                className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-black transition bg-red-500 cursor-pointer hover:rounded-lg hover:bg-red-400"
+                            >
+                                Request Return
+                            </motion.button>
+                        )}
+                    </div>
+                )}
             </div>
         </>
     )

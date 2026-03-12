@@ -11,7 +11,7 @@ interface TokenData {
 export const protect = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
     let token;
 
-    // ✔ Read JWT from HTTP-ONLY COOKIE
+    //  Read JWT from HTTP-ONLY COOKIE
     if (req.cookies && req.cookies.jwt) {
         token = req.cookies.jwt;
     }
@@ -21,10 +21,10 @@ export const protect = asyncHandler(async (req: any, res: Response, next: NextFu
         return
     }
 
-    // ✔ VERIFY TOKEN
+    //  VERIFY TOKEN
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as TokenData;
 
-    // ✔ Attach user to request
+    //  Attach user to request
     req.user = await User.findById(decoded.id).select("-password");
 
     if (!req.user) {

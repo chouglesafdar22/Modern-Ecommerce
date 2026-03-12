@@ -8,7 +8,8 @@ import {
     markOrderDelivered,
     markOrderShipped,
     requestReturn,
-    approveReturn
+    approveReturn,
+    viewInvoice
 } from "../controllers/orderController";
 import { protect, admin } from "../middlewares/authMiddleware";
 
@@ -24,5 +25,6 @@ router.put("/:id/shipped", protect, admin, markOrderShipped);
 router.put("/:id/delivery", protect, admin, markOrderDelivered);
 router.put("/:id/return", protect, requestReturn);
 router.put("/:id/return/approve", protect, admin, approveReturn);
+router.get("/:id/invoice", protect, viewInvoice);
 
 export default router;

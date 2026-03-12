@@ -3,10 +3,17 @@ import asyncHandler from "express-async-handler";
 import Order from "../models/orderModel";
 import Product from "../models/productModel";
 import { generateInvoice } from "../utils/generateInvoice";
+import orderCoupon from "../models/orderCouponModel";
+import {
+    generateCouponCode,
+    generateDiscountPercentage,
+    getCouponExpires
+} from "../utils/orderCouponUtils";
+import path from "path";
 
 // create new order
 export const addOrderItems = asyncHandler(async (req: Request, res: Response) => {
-    const { orderItems, shippingAddress, phoneNumber, paymentMethod } = req.body;
+    const { orderItems, shippingAddress, phoneNumber, paymentMethod, orderCouponId } = req.body;
 
     if (!orderItems || orderItems.length === 0) {
         res.status(400);
@@ -52,7 +59,36 @@ export const addOrderItems = asyncHandler(async (req: Request, res: Response) =>
         })
     );
 
-    const totalPrice = taxPrice + shippingFee + discountPrice;
+    let totalPrice = taxPrice + shippingFee + discountPrice;
+
+    let appliedCoupon = null;
+    let couponDiscountAmount = 0;
+
+    if (orderCouponId) {
+        const coupon = await orderCoupon.findOne({ orderCouponId });
+
+        if (!coupon) {
+            throw new Error("Invalid coupon");
+        }
+
+        if (coupon.isUsed) {
+            throw new Error("Coupon already used");
+        }
+
+        if (new Date(coupon.expiresAt).getTime() < Date.now()) {
+            throw new Error("Coupon expired");
+        }
+
+        //  Calculate % discount
+        couponDiscountAmount = (totalPrice * coupon.discountPercent) / 100;
+        totalPrice = totalPrice - couponDiscountAmount;
+
+        //  Mark coupon used
+        coupon.isUsed = true;
+        await coupon.save();
+
+        appliedCoupon = coupon._id
+    }
 
     for (const item of orderItems) {
         const product = await Product.findById(item.product);
@@ -75,6 +111,7 @@ export const addOrderItems = asyncHandler(async (req: Request, res: Response) =>
         shippingAddress,
         phoneNumber,
         paymentMethod,
+        orderCouponId: appliedCoupon,
         itemsPrice,
         taxPrice,
         shippingFee,
@@ -101,16 +138,27 @@ export const addOrderItems = asyncHandler(async (req: Request, res: Response) =>
         throw new Error("Invoice generation failed");
     };
 
-    await Order.findByIdAndUpdate(fullOrder._id, { invoiceUrl }, { new: true });
+    await Order.findByIdAndUpdate(fullOrder._id, { invoiceUrl });
+
+    const coupon = await orderCoupon.create({
+        user: req.user?._id,
+        code: generateCouponCode(),
+        discountPercent: generateDiscountPercentage(),
+        expiresAt: getCouponExpires()
+    });
 
     const updated = await Order.findById(fullOrder._id);
-    res.status(201).json(updated);
+    res.status(201).json({
+        updated,
+        coupon
+    });
 });
 
 // Get logged-in user's orders
 export const getMyOrders = asyncHandler(async (req: any, res: Response) => {
     const orders = await Order.find({ user: req.user._id })
-        .populate("orderItems.product", "name image price");
+        .populate("orderItems.product", "name image price")
+        .sort({ createdAt: -1 });
 
     res.json(orders);
 });
@@ -125,11 +173,12 @@ export const getAllOrders = asyncHandler(async (_req: Request, res: Response) =>
     res.json(orders);
 });
 
-// get ordeer by id
+// get order by id
 export const getOrderById = asyncHandler(async (req: any, res: Response) => {
     const order = await Order.findById(req.params.id)
         .populate("user", "name email")
-        .populate("orderItems.product", "name price image");
+        .populate("orderItems.product", "name price image")
+        .populate("orderCouponId", "code discountPercent");
 
     if (!order) {
         res.status(404).json({ message: "Order not found" });
@@ -308,4 +357,23 @@ export const approveReturn = asyncHandler(async (req: any, res: Response) => {
 
     await order.save();
     res.json({ message: "Return approved successfully", order });
+});
+
+export const viewInvoice = asyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+
+    if (!order || !order.invoiceUrl) {
+        res.status(404);
+        throw new Error("Invoice not found");
+    }
+
+    res.sendFile(
+        path.join(process.cwd(), order.invoiceUrl),
+        {
+            headers: {
+                "Content-Type": "application/pdf",
+                "Content-Disposition": "inline",
+            },
+        }
+    );
 });

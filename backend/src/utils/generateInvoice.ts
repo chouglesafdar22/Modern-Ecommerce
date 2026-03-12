@@ -1,52 +1,31 @@
 import PDFDocument from "pdfkit";
-import { v2 as cloudinary } from "cloudinary";
+import fs from "fs";
+import path from "path";
 
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
-});
-
-export const generateInvoice = async (order: any, user: any): Promise<string> => {
+export const generateInvoice = async (
+    order: any,
+    user: any
+): Promise<string> => {
     return new Promise((resolve, reject) => {
         try {
+            const invoiceDir = path.join(process.cwd(), "uploads/invoices");
+
+            if (!fs.existsSync(invoiceDir)) {
+                fs.mkdirSync(invoiceDir, { recursive: true });
+            }
+
+            const filePath = path.join(invoiceDir, `${order._id}.pdf`);
+
             const doc = new PDFDocument({ margin: 25 });
+            const stream = fs.createWriteStream(filePath);
 
-            // Create Cloudinary upload stream
-            const cloudStream = cloudinary.uploader.upload_stream(
-                {
-                    folder: "invoices",
-                    resource_type: "raw",
-                    public_id: `${order._id}`,
-                    format: "pdf",
-                    type: "upload"
-                },
-                (err, result) => {
-                    if (err) return reject(err);
-                    if (!result?.secure_url) return reject("Cloudinary did not return URL");
-                    resolve(result.secure_url);
-                }
-            );
-
-            // IMPORTANT: Pipe PDF → cloudinary
-            const stream = doc.pipe(cloudStream);
-
-            // IMPORTANT FIX: Wait for PDF streaming to complete
-            stream.on("finish", () => {
-                console.log("PDF streaming finished.");
-            });
-
-            /*
-             * ------------------------------------------------------
-             *  PDF CONTENT BELOW (same as before)
-             * ------------------------------------------------------
-             */
+            doc.pipe(stream);
 
             const company = {
                 name: "FragranceStore",
                 address: "Chiplun - 415605, Ratnagiri, Maharashtra, India",
                 email: "fragrancestore@gmail.com",
-                gst: "GSTIN: 27ABCDE1234F1Z5"
+                gst: "GSTIN: 27ABCDE1234F1Z5",
             };
 
             doc.fontSize(22).text(company.name, 40, 40);
@@ -76,6 +55,7 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
                 );
 
             const tableTop = 300;
+
             doc.fontSize(12)
                 .text("Product", 40, tableTop)
                 .text("Qty", 180, tableTop)
@@ -90,7 +70,6 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
             let y = tableTop + 30;
 
             order.orderItems.forEach((item: any) => {
-                const name = item.name;
                 const price = Number(item.price);
                 const qty = Number(item.qty);
                 const tax = Number(item.taxPrice);
@@ -105,16 +84,9 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
                 }
 
                 doc.fontSize(11)
-                    .text(name, 40, y, { width: 130 })
+                    .text(item.name, 40, y, { width: 130 })
                     .text(String(qty), 180, y)
-
-                    .save()
                     .text(price.toFixed(2), 240, y)
-                    .moveTo(240, y + 7)
-                    .lineTo(240 + price.toFixed(2).length * 6, y + 7)
-                    .stroke()
-                    .restore()
-
                     .text(tax.toFixed(2), 310, y)
                     .text(ship.toFixed(2), 360, y)
                     .text(discount.toFixed(2), 430, y)
@@ -129,24 +101,41 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
             doc.fontSize(12)
                 .text("Items Total:", 350, y)
                 .text(`Rs. ${order.itemsPrice.toFixed(2)}`, 500, y)
+
                 .text("Tax:", 350, y + 20)
                 .text(`Rs. ${order.taxPrice.toFixed(2)}`, 500, y + 20)
+
                 .text("Shipping Fee:", 350, y + 40)
                 .text(`Rs. ${order.shippingFee.toFixed(2)}`, 500, y + 40)
-                .text("Discount:", 350, y + 60)
+
+                .text("Product Discount:", 350, y + 60)
                 .text(`Rs. ${order.discountPrice.toFixed(2)}`, 500, y + 60);
 
+            // ✅ NEW — COUPON DISPLAY
+            if (order.orderCouponId) {
+                doc.text(
+                    `Coupon (${order.orderCouponId.code} - ${order.orderCouponId.discountPercent}%)`,
+                    350,
+                    y + 80
+                )
+                    .text(`Applied`, 500, y + 80);
+            }
+
             doc.fontSize(14)
-                .text("Grand Total:", 350, y + 100)
-                .text(`Rs. ${order.totalPrice.toFixed(2)}`, 500, y + 100);
+                .text("Grand Total:", 350, y + 120)
+                .text(`Rs. ${order.totalPrice.toFixed(2)}`, 500, y + 120);
 
-            const signatureY = 720;
-            doc.moveTo(350, signatureY).lineTo(560, signatureY).stroke();
-            doc.fontSize(10).text("Authorized Signature", 410, signatureY + 5);
-
-            doc.fontSize(10).text("Thank you for shopping!", 40, 760, { align: "center" });
+            doc.fontSize(10).text("Thank you for shopping!", 40, 700, {
+                align: "center",
+            });
 
             doc.end();
+
+            stream.on("finish", () => {
+                resolve(`/uploads/invoices/${order._id}.pdf`);
+            });
+
+            stream.on("error", reject);
 
         } catch (err) {
             reject(err);

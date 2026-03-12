@@ -10,19 +10,21 @@ export interface IOrderItem {
     shippingFee: number;
     finalPrice: number;
     product: Types.ObjectId;
-}
+};
+
+export interface IShippingAddress {
+    address: string;
+    city: string;
+    pinCode: number;
+    district: string;
+    state: string;
+    country: string;
+};
 
 export interface IOrder extends Document {
     user: Types.ObjectId;
     orderItems: IOrderItem[];
-    shippingAddress: {
-        address: string;
-        city: string;
-        pinCode: number;
-        district: string;
-        state: string;
-        country: string;
-    };
+    shippingAddress: IShippingAddress;
     phoneNumber: number;
     paymentMethod: string;
     paymentResult?: {
@@ -31,7 +33,7 @@ export interface IOrder extends Document {
         update_time: string;
         email_address: string;
     };
-
+    orderCouponId?: string;
     itemsPrice: number;
     taxPrice: number;
     shippingFee: number;
@@ -102,6 +104,8 @@ const orderSchema = new Schema<IOrder>(
             update_time: String,
             email_address: String,
         },
+
+        orderCouponId: { type: String },
 
         itemsPrice: { type: Number, required: true },
         taxPrice: { type: Number, required: true },
