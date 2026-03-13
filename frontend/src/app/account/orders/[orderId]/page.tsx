@@ -5,7 +5,6 @@ import { useRouter, useParams } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
-import Link from "next/link";
 
 interface OrderItem {
     name: string;
@@ -141,14 +140,9 @@ export default function Page() {
             });
 
             const file = new Blob([res.data], { type: "application/pdf" });
-            const url = window.URL.createObjectURL(file);
+            const fileURL = URL.createObjectURL(file);
 
-            const link = document.createElement("a");
-            link.href = url;
-            link.target = "_blank";
-            link.click();
-
-            window.URL.revokeObjectURL(url);
+            window.open(fileURL);
         } catch (error) {
             toast.error("Failed to open invoice");
         }
