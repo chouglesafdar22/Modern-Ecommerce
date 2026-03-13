@@ -133,6 +133,21 @@ export default function Page() {
         return formatDate(d);
     };
 
+    const handleInvoice = async () => {
+    try {
+        const res = await api.get(`/orders/${orderId}/invoice`, {
+            responseType: "blob"
+        });
+
+        const file = new Blob([res.data], { type: "application/pdf" });
+        const fileURL = URL.createObjectURL(file);
+
+        window.open(fileURL);
+    } catch (error) {
+        toast.error("Failed to open invoice");
+    }
+};
+
     return (
         <>
             <ToastContainer
@@ -294,12 +309,7 @@ export default function Page() {
                         whileTap={{ scale: 0.99 }}
                         transition={{ type: "decay", duration: 0.3, ease: "easeInOut" }}
                         className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-white transition bg-black cursor-pointer hover:rounded-lg hover:bg-gray-900"
-                        onClick={() => {
-                            window.open(`${process.env.NEXT_PUBLIC_API_URL}/orders/${order._id}/invoice`,
-                                "_blank",
-                                "noopener noreferrer"
-                            )
-                        }}
+                        onClick={handleInvoice}
                     >
                         View Invoice
                     </motion.button>
