@@ -111,15 +111,15 @@ export const generateInvoice = async (
                 .text("Product Discount:", 350, y + 60)
                 .text(`Rs. ${order.discountPrice.toFixed(2)}`, 500, y + 60);
 
-            // ✅ NEW — COUPON DISPLAY
-            if (order.orderCouponId) {
-                doc.text(
-                    `Coupon (${order.orderCouponId.code} - ${order.orderCouponId.discountPercent}%)`,
-                    350,
-                    y + 80
-                )
-                    .text(`Applied`, 500, y + 80);
-            }
+            // //  NEW — COUPON DISPLAY
+            // if (order.orderCouponId) {
+            //     doc.text(
+            //         `Coupon (${order.orderCouponId.code} - ${order.orderCouponId.discountPercent}%)`,
+            //         350,
+            //         y + 80
+            //     )
+            //         .text(`Applied`, 500, y + 80);
+            // }
 
             doc.fontSize(14)
                 .text("Grand Total:", 350, y + 120)
