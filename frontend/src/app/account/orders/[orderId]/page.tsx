@@ -289,20 +289,20 @@ export default function Page() {
                 </div>
 
                 {order.invoiceUrl && (
-                    <a
-                        href={`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/invoice`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <motion.button
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                        transition={{ type: "decay", duration: 0.3, ease: "easeInOut" }}
+                        className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-white transition bg-black cursor-pointer hover:rounded-lg hover:bg-gray-900"
+                        onClick={() => {
+                            window.open(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/invoice`,
+                                "_blank",
+                                "noopener noreferrer"
+                            )
+                        }}
                     >
-                        <motion.button
-                            whileHover={{ scale: 1.01 }}
-                            whileTap={{ scale: 0.99 }}
-                            transition={{ type: "decay", duration: 0.3, ease: "easeInOut" }}
-                            className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-white transition bg-black cursor-pointer hover:rounded-lg hover:bg-gray-900"
-                        >
-                            View Invoice
-                        </motion.button>
-                    </a>
+                        View Invoice
+                    </motion.button>
                 )}
 
                 {/* order return */}
