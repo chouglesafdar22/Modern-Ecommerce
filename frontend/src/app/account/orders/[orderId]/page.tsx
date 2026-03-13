@@ -134,19 +134,24 @@ export default function Page() {
     };
 
     const handleInvoice = async () => {
-    try {
-        const res = await api.get(`/orders/${order._id}/invoice`, {
-            responseType: "blob"
-        });
+        try {
+            const res = await api.get(`/orders/${order._id}/invoice`, {
+                responseType: "blob"
+            });
 
-        const file = new Blob([res.data], { type: "application/pdf" });
-        const fileURL = URL.createObjectURL(file);
+            const file = new Blob([res.data], { type: "application/pdf" });
+            const url = window.URL.createObjectURL(file);
 
-        window.open(fileURL);
-    } catch (error) {
-        toast.error("Failed to open invoice");
-    }
-};
+            const link = document.createElement("a");
+            link.href = url;
+            link.target = "_blank";
+            link.click();
+
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            toast.error("Failed to open invoice");
+        }
+    };
 
     return (
         <>
