@@ -1,5 +1,5 @@
 import PDFDocument from "pdfkit";
-import cloudinary from "../config/cloudinary";
+import cloudinary from "./cloudinary";
 
 export const generateInvoice = async (order: any, user: any): Promise<string> => {
     return new Promise((resolve, reject) => {

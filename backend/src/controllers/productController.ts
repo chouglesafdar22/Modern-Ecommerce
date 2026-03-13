@@ -3,7 +3,7 @@ import Product from "../models/productModel";
 import Category from "../models/categoryModel";
 import asyncHandler from "express-async-handler";
 import slugify from "slugify";
-import cloudinary from "../config/cloudinary";
+import cloudinary from "../utils/cloudinary";
 
 // 
 const uploadToCloudinary = (file: Express.Multer.File) => {
