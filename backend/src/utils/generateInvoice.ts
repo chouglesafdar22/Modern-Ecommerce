@@ -14,17 +14,24 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
                 try {
                     const pdfBuffer = Buffer.concat(buffers);
 
-                    const upload = await cloudinary.uploader.upload(
-                        `data:application/pdf;base64,${pdfBuffer.toString("base64")}`,
+                    const uploadStream = cloudinary.uploader.upload_stream(
                         {
                             folder: "invoices",
                             resource_type: "raw",
                             public_id: `${order._id}`,
                             format: "pdf",
+                        },
+                        (error, result) => {
+                            if (error) {
+                                return reject(error);
+                            }
+
+                            resolve(result?.secure_url || "");
                         }
                     );
 
-                    resolve(upload.secure_url);
+                    uploadStream.end(pdfBuffer);
+
                 } catch (err) {
                     reject(err);
                 }
