@@ -135,7 +135,7 @@ export default function Page() {
 
     const handleInvoice = async () => {
     try {
-        const res = await api.get(`/orders/${orderId}/invoice`, {
+        const res = await api.get(`/orders/${order._id}/invoice`, {
             responseType: "blob"
         });
 
