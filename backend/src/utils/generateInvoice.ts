@@ -132,7 +132,7 @@ export const generateInvoice = async (
             doc.end();
 
             stream.on("finish", () => {
-                resolve(`/uploads/invoices/${order._id}.pdf`);
+                resolve(`uploads/invoices/${order._id}.pdf`);
             });
 
             stream.on("error", reject);
