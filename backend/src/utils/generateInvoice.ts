@@ -1,25 +1,36 @@
 import PDFDocument from "pdfkit";
-import fs from "fs";
-import path from "path";
+import cloudinary from "../config/cloudinary";
 
-export const generateInvoice = async (
-    order: any,
-    user: any
-): Promise<string> => {
+export const generateInvoice = async (order: any, user: any): Promise<string> => {
     return new Promise((resolve, reject) => {
         try {
-            const invoiceDir = path.join(process.cwd(), "uploads/invoices");
-
-            if (!fs.existsSync(invoiceDir)) {
-                fs.mkdirSync(invoiceDir, { recursive: true });
-            }
-
-            const filePath = path.join(invoiceDir, `${order._id}.pdf`);
-
             const doc = new PDFDocument({ margin: 25 });
-            const stream = fs.createWriteStream(filePath);
 
-            doc.pipe(stream);
+            const buffers: any[] = [];
+
+            doc.on("data", buffers.push.bind(buffers));
+
+            doc.on("end", async () => {
+                try {
+                    const pdfBuffer = Buffer.concat(buffers);
+
+                    const upload = await cloudinary.uploader.upload(
+                        `data:application/pdf;base64,${pdfBuffer.toString("base64")}`,
+                        {
+                            folder: "invoices",
+                            resource_type: "raw",
+                            public_id: `${order._id}`,
+                            format: "pdf",
+                        }
+                    );
+
+                    resolve(upload.secure_url);
+                } catch (err) {
+                    reject(err);
+                }
+            });
+
+            /* -------- YOUR ORIGINAL PDF DESIGN -------- */
 
             const company = {
                 name: "FragranceStore",
@@ -101,13 +112,10 @@ export const generateInvoice = async (
             doc.fontSize(12)
                 .text("Items Total:", 350, y)
                 .text(`Rs. ${order.itemsPrice.toFixed(2)}`, 500, y)
-
                 .text("Tax:", 350, y + 20)
                 .text(`Rs. ${order.taxPrice.toFixed(2)}`, 500, y + 20)
-
                 .text("Shipping Fee:", 350, y + 40)
                 .text(`Rs. ${order.shippingFee.toFixed(2)}`, 500, y + 40)
-
                 .text("Product Discount:", 350, y + 60)
                 .text(`Rs. ${order.discountPrice.toFixed(2)}`, 500, y + 60);
 
@@ -125,18 +133,9 @@ export const generateInvoice = async (
                 .text("Grand Total:", 350, y + 120)
                 .text(`Rs. ${order.totalPrice.toFixed(2)}`, 500, y + 120);
 
-            doc.fontSize(10).text("Thank you for shopping!", 40, 700, {
-                align: "center",
-            });
+            doc.fontSize(10).text("Thank you for shopping!", 40, 700, { align: "center" });
 
             doc.end();
-
-            stream.on("finish", () => {
-                resolve(`uploads/invoices/${order._id}.pdf`);
-            });
-
-            stream.on("error", reject);
-
         } catch (err) {
             reject(err);
         }

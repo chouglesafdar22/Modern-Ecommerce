@@ -133,19 +133,11 @@ export default function Page() {
         return formatDate(d);
     };
 
-    const handleInvoice = async () => {
-        try {
-            const res = await api.get(`/orders/${order._id}/invoice`, {
-                responseType: "blob"
-            });
-
-            const file = new Blob([res.data], { type: "application/pdf" });
-            const fileURL = URL.createObjectURL(file);
-
-            window.open(fileURL);
-        } catch (error) {
-            toast.error("Failed to open invoice");
-        }
+    const handleInvoice = () => {
+        window.open(
+            `${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/invoice`,
+            "_blank"
+        );
     };
 
     return (

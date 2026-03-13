@@ -367,13 +367,5 @@ export const viewInvoice = asyncHandler(async (req, res) => {
         throw new Error("Invoice not found");
     };
 
-    res.sendFile(
-        path.join(process.cwd(), order.invoiceUrl),
-        {
-            headers: {
-                "Content-Type": "application/pdf",
-                "Content-Disposition": "inline",
-            },
-        }
-    );
+    res.redirect(order.invoiceUrl);
 });
