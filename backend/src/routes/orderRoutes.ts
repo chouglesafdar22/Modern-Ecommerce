@@ -25,6 +25,6 @@ router.put("/:id/shipped", protect, admin, markOrderShipped);
 router.put("/:id/delivery", protect, admin, markOrderDelivered);
 router.put("/:id/return", protect, requestReturn);
 router.put("/:id/return/approve", protect, admin, approveReturn);
-router.get("/:id/invoice", viewInvoice);
+router.get("/:id/invoice", protect, viewInvoice);
 
 export default router;

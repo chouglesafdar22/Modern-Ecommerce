@@ -134,25 +134,25 @@ export default function Page() {
         return formatDate(d);
     };
 
-    // const handleInvoice = async () => {
-    //     try {
-    //         const res = await api.get(`/orders/${order._id}/invoice`, {
-    //             responseType: "blob"
-    //         });
+    const handleInvoice = async () => {
+        try {
+            const res = await api.get(`/orders/${order._id}/invoice`, {
+                responseType: "blob"
+            });
 
-    //         const file = new Blob([res.data], { type: "application/pdf" });
-    //         const url = window.URL.createObjectURL(file);
+            const file = new Blob([res.data], { type: "application/pdf" });
+            const url = window.URL.createObjectURL(file);
 
-    //         const link = document.createElement("a");
-    //         link.href = url;
-    //         link.target = "_blank";
-    //         link.click();
+            const link = document.createElement("a");
+            link.href = url;
+            link.target = "_blank";
+            link.click();
 
-    //         window.URL.revokeObjectURL(url);
-    //     } catch (error) {
-    //         toast.error("Failed to open invoice");
-    //     }
-    // };
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            toast.error("Failed to open invoice");
+        }
+    };
 
     return (
         <>
@@ -310,19 +310,15 @@ export default function Page() {
                 </div>
 
                 {order.invoiceUrl && (
-                    <Link
-                        href={`${process.env.NEXT_PUBLIC_API_URL}/orders/${order._id}/invoice`}
-                        target="_blank"
+                    <motion.button
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                        transition={{ type: "decay", duration: 0.3, ease: "easeInOut" }}
+                        className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-white transition bg-black cursor-pointer hover:rounded-lg hover:bg-gray-900"
+                        onClick={handleInvoice}
                     >
-                        <motion.button
-                            whileHover={{ scale: 1.01 }}
-                            whileTap={{ scale: 0.99 }}
-                            transition={{ type: "decay", duration: 0.3, ease: "easeInOut" }}
-                            className="w-full py-2 px-2 rounded-md font-medium xl:text-lg lg:text-base sm:text-sm text-xs text-white transition bg-black cursor-pointer hover:rounded-lg hover:bg-gray-900"
-                        >
-                            View Invoice
-                        </motion.button>
-                    </Link>
+                        View Invoice
+                    </motion.button>
                 )}
 
                 {/* order return */}
