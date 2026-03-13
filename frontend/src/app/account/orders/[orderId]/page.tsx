@@ -291,7 +291,6 @@ export default function Page() {
                 {order.invoiceUrl && (
                     <a
                         href={`${process.env.NEXT_PUBLIC_API_URL}/orders/${order._id}/invoice`}
-                        
                         target="_blank"
                         rel="noopener noreferrer"
                     >

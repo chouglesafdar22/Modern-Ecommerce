@@ -365,7 +365,7 @@ export const viewInvoice = asyncHandler(async (req, res) => {
     if (!order || !order.invoiceUrl) {
         res.status(404);
         throw new Error("Invoice not found");
-    }
+    };
 
     res.sendFile(
         path.join(process.cwd(), order.invoiceUrl),
