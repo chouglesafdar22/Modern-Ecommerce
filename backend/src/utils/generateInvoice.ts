@@ -6,9 +6,10 @@ export const generateInvoice = async (order: any, user: any): Promise<string> =>
         try {
             const doc = new PDFDocument({ margin: 25 });
 
-            const buffers: any[] = [];
-
-            doc.on("data", buffers.push.bind(buffers));
+            const buffers: Buffer[] = [];
+            doc.on("data", (chunk: Buffer) => {
+                buffers.push(chunk);
+            });
 
             doc.on("end", async () => {
                 try {
