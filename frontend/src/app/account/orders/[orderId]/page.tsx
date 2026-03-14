@@ -133,11 +133,13 @@ export default function Page() {
         return formatDate(d);
     };
 
-    const handleInvoice = () => {
-        window.open(
-            `${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/invoice`,
-            "_blank"
-        );
+    const handleInvoice = async () => {
+        try {
+            const res = await api.get(`/orders/${orderId}/invoice`)
+            window.open(res.data.invoiceUrl, "_blank")
+        } catch (error) {
+            toast.error("Failed to open invoice");
+        }
     };
 
     return (
