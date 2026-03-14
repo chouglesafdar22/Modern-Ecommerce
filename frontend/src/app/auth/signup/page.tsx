@@ -19,6 +19,7 @@ interface RegisterForm {
 export default function Page() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const {
         register,
@@ -108,7 +109,7 @@ export default function Page() {
                             <div>
                                 <label className="xl:text-lg lg:text-base sm:text-sm text-xs font-medium">Password</label>
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     placeholder="······"
                                     {...register("password", { required: true, minLength: 6 })}
                                     className="mt-1 w-full ring-gray-500 px-3 py-2 border rounded-lg focus:ring focus:ring-black"
@@ -158,8 +159,10 @@ export default function Page() {
                                 <input
                                     type="checkbox"
                                     className="w-3 h-3"
+                                    checked={showPassword}
+                                    onChange={() => setShowPassword(prev => !prev)}
                                 />
-                                I agree with <span className="text-blue-500 hover:text-blue-800 cursor-pointer hover:underline xl:text-base lg:text-sm sm:text-xs text-[10px]">Terms & condition</span>
+                                Show Password
                             </label>
                         </div>
                         <span className="text-center font-normal xl:text-base lg:text-sm sm:text-xs text-[10px] mt-2.5">

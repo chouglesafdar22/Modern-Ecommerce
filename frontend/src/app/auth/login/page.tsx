@@ -17,6 +17,7 @@ interface LoginForm {
 export default function Page() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const {
         register,
@@ -95,7 +96,7 @@ export default function Page() {
                             <div>
                                 <label className="xl:text-lg lg:text-base sm:text-sm text-xs font-medium">Password</label>
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     placeholder="······"
                                     {...register("password", { required: true, minLength: 6 })}
                                     className="mt-1 w-full ring-gray-500 px-3 py-2 border rounded-lg focus:ring focus:ring-black"
@@ -125,8 +126,10 @@ export default function Page() {
                                 <input
                                     type="checkbox"
                                     className="w-3 h-3"
+                                    checked={showPassword}
+                                    onChange={() => setShowPassword(prev => !prev)}
                                 />
-                                Remember me
+                                Show Password
                             </label>
                             <Link
                                 href={"/auth/forgot-password"}
